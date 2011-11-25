@@ -35,7 +35,7 @@ class NodeProcess(object):
     def get_error(self):
         while not rospy.is_shutdown():
             err = self.proc.stderr.readline()
-            rospy.logerror("I got error from Node: %s", err)
+            rospy.logerr("I got error from Node: %s", err)
 
 
 def watcher():
