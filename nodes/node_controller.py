@@ -23,9 +23,10 @@ class NodeProcess(object):
         self.err.start()
 
     def sendCommand(self, data):
-        self.proc.stdin.write(data.data)
-        rospy.loginfo(rospy.get_name()+
-                    " I heard %s",data.data)
+        if data.data:
+            self.proc.stdin.write(data.data)
+            rospy.loginfo(rospy.get_name()+
+                        " I heard %s",data.data)
 
     def get_output(self):
         while not rospy.is_shutdown():
