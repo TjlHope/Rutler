@@ -4,19 +4,23 @@ import roslib; roslib.load_manifest('rutler_interface')
 import rospy
 from std_msgs.msg import String
 
+
 def looker():
     pub = rospy.Publisher('chatter', String)
     rospy.init_node('looker')
-    i = 0
+    commands = {
+        "look": '{"mouth": "look"}',
+        "query": '{"mouth": "small"}',
+        "acknowledge": '{"mouth": "smileopen"}',
+        "happy": '{"mouth": "smile"}',
+        "sad": '{"mouth": "sad"}',
+        "open": '{"mouth": "open"}'
+    }
     while not rospy.is_shutdown():
-        if(i % 2): # even
-            str = '{"mouth": "look"}'
-        else:
-            str = '{"mouth": "smile"}'
-        i += 1
-        rospy.loginfo(str)
-        pub.publish(String(str))
-        rospy.sleep(1.0)
+        for item in commands:
+            rospy.loginfo(commands[item])
+            pub.publish(String(commands[item]))
+            rospy.sleep(1.0)
 
 if __name__ == '__main__':
     try:
