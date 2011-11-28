@@ -8,18 +8,12 @@ from std_msgs.msg import String
 def looker():
     pub = rospy.Publisher('chatter', String)
     rospy.init_node('looker')
-    commands = {
-        "look": '{"mouth": "look"}',
-        "query": '{"mouth": "small"}',
-        "acknowledge": '{"mouth": "smileopen"}',
-        "happy": '{"mouth": "smile"}',
-        "sad": '{"mouth": "sad"}',
-        "open": '{"mouth": "open"}'
-    }
+    commands = ['look', 'query', 'acknowledge', 'happy', 'sad', 'open'];
     while not rospy.is_shutdown():
         for item in commands:
-            rospy.loginfo(commands[item])
-            pub.publish(String(commands[item]))
+            string = '{"face":"%s"}' % item
+            rospy.loginfo(string)
+            pub.publish(String(string))
             rospy.sleep(1.0)
 
 if __name__ == '__main__':
