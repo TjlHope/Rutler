@@ -8,7 +8,8 @@ from std_msgs.msg import String
 def looker():
     pub = rospy.Publisher('chatter', String)
     rospy.init_node('looker')
-    commands = ['look', 'query', 'acknowledge', 'happy', 'sad', 'open'];
+    commands = ['look', 'query', 'acknowledge', 'happy', 'sad', 'open', 'wink', 
+    'laughing'];
     while not rospy.is_shutdown():
         for item in commands:
             string = '{"face":"%s"}' % item

@@ -7,6 +7,7 @@ import sys
 import shlex
 import subprocess as sp
 import threading as th
+import json
 
 class NodeProcess(object):
     def __init__(self, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE, 
@@ -30,7 +31,13 @@ class NodeProcess(object):
 
     def get_output(self):
         while not rospy.is_shutdown():
-            out = self.proc.stdout.readline()
+            try:
+                line = self.proc.stdout.readline()
+                out = json.loads(line)
+                self.pub.publish(String(json.dumps(out)))
+                rospy.loginfo("JSON: %s", out)
+            except ValueError:
+                out = line
             rospy.loginfo("I got from Node: %s", out)
 
     def get_error(self):
@@ -39,12 +46,14 @@ class NodeProcess(object):
             rospy.logerr("I got error from Node: %s", err)
 
 
-def watcher():
+def watcher(node):
     rospy.init_node('watcher', anonymous=True)
-    rospy.Subscriber("chatter", String, node.sendCommand)
+    rospy.Subscriber("interface", String, node.sendCommand)
+    node.pub = rospy.Publisher('user_input', String)
     rospy.spin()
 
 if __name__ == '__main__':
-    node = NodeProcess(name='node /home/jkimbo/www/rutler-interface/app.js')
-    watcher()
+    node = NodeProcess(name=
+        'node /home/jkimbo/www/rutler-interface/app.js')
+    watcher(node)
 
