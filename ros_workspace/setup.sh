@@ -67,5 +67,7 @@ new="${script_dir}${stacks}"	# don't need : as $stacks starts with :
 export ROS_WORKSPACE="${new}${ROS_WORKSPACE+:}${ROS_WORKSPACE#${new}}"
 export ROS_PACKAGE_PATH="${new}${ROS_PACKAGE_PATH+:}${ROS_PACKAGE_PATH#${new}}"
 
+export pass_seds='s:^.*<<<\s\+\(\S\+\)\s\+\[PASS\].*:\1:p'
+
 # Keep enviroment polution down
 unset ext script script_dir stacks path new
