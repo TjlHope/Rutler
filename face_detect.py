@@ -8,7 +8,7 @@ Size = namedtuple('Size', ('width', 'height'))
 Rect = namedtuple('Rect', ('x', 'y', 'width', 'height'))
 
 def init_display(name='Camera'):
-    cv.NamedWindow(name, cv.WINDOW_AUTOSIZE)
+    cv.NamedWindow(name, cv.CV_WINDOW_AUTOSIZE)
     return name
 
 def init_camera():
@@ -37,8 +37,8 @@ def detect(image):
 
     # detect objects
     print "load face training"
-    cascade = cv.Load('/usr/share/opencv/haarcascades/haarcascade_frontalface_alt.xml')
-    #cascade = cv.Load('/usr/share/opencv/haarcascades/haarcascade_profileface.xml')
+    #cascade = cv.Load('/usr/share/opencv/haarcascades/haarcascade_frontalface_alt.xml')
+    cascade = cv.Load('/usr/share/opencv/haarcascades/haarcascade_frontalface_alt_tree.xml')
     print "perform detect"
     #faces = cv.HaarDetectObjects(grayscale, cascade, cv.CreateMemStorage())
     faces = cv.HaarDetectObjects(grayscale, cascade, cv.CreateMemStorage(),
