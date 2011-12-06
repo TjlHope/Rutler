@@ -1,8 +1,5 @@
 #!/usr/bin/env python
 
-from collections import namedtuple
-import csv
-
 import roslib
 roslib.load_manifest('simple_navigation_goals')
 
@@ -11,8 +8,11 @@ from std_msgs.msg import String
 import actionlib
 import move_base_msgs.msg
 
+try:
+    from misc.input import csv2dict
+except ImportError:
+    from python_misc.input import csv2dict
 
-Coord = namedtuple("Coord", 'x y w')
 
 goal = None
 client = None
@@ -27,7 +27,7 @@ chamber = "302"
 
 def read_csv(file_name):
     # TODO: get from Tom
-    pass
+    return csv2dict(file_name)
 
 
 def go_to_dest(dest):
