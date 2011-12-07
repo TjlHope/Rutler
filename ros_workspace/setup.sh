@@ -19,11 +19,17 @@ esac
 
 # Get the dir of this script
 script_dir="$(readlink -f "$(dirname "${script}")")"
+# Add individual local packages to package path
+for d in ${script_dir}/*
+do
+    [ -d "${d}" ] &&
+	local_stacks="${local_stacks}:${d}"	# add to stacks path
+done
 
 # Source ros setup script and get PATH settings
-if [ -f "/opt/ros/electric/ros/setup.${ext}" ]
+if [ -f "/opt/ros/electric/setup.${ext}" ]
 then
-    . "/opt/ros/electric/ros/setup.${ext}"	# source setup script
+    . "/opt/ros/electric/setup.${ext}"	# source setup script
     [ -d "/opt/ros/electric/stacks" ] &&
 	for d in /opt/ros/electric/stacks/*
 	do
@@ -62,12 +68,19 @@ else
 fi
 
 # new PATHS to add to the start of ROS env vars
-new="${script_dir}${stacks}"	# don't need : as $stacks starts with :
+ws="${script_dir}:${path}"
+pp="${local_stacks#:}${stacks}"	# seperatator (:) in $stacks
 
-export ROS_WORKSPACE="${new}${ROS_WORKSPACE+:}${ROS_WORKSPACE#${new}}"
-export ROS_PACKAGE_PATH="${new}${ROS_PACKAGE_PATH+:}${ROS_PACKAGE_PATH#${new}}"
+export ROS_WORKSPACE="${ws}${ROS_WORKSPACE+:}${ROS_WORKSPACE#${ws}}"
+export ROS_PACKAGE_PATH="${pp}${ROS_PACKAGE_PATH+:}${ROS_PACKAGE_PATH#${pp}}"
 
-export pass_seds='s:^.*<<<\s\+\(\S\+\)\s\+\[PASS\].*:\1:p'
+# conveniance stuff for non gentoo:
+if [ ! -f "/etc/lsb-release" ] ||
+    [ "$(sed -ne 's:^DISTRIB_ID=.\(.*\).$:\1:p' <'/etc/lsb-release')" = 'Gentoo' ]
+then
+    export pass_seds='s:^.*<<<\s\+\(\S\+\)\s\+\[PASS\].*:\1:p'
+    alias rosmake='rosmake --mark-installed --no-rosdep'
+fi
 
 # Keep enviroment polution down
-unset ext script script_dir stacks path new
+unset ext script script_dir local_stacks stacks path ws pp
