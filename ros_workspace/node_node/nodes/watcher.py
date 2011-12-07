@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-import roslib; roslib.load_manifest('rutler_interface')
+import roslib; roslib.load_manifest('node_node')
 import rospy
 from std_msgs.msg import String
 

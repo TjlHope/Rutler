@@ -1,0 +1,101 @@
+Language model created by QuickLM on Fri Dec  2 10:14:13 EST 2011
+Copyright (c) 1996-2010 Carnegie Mellon University and Alexander I. Rudnicky
+
+The model is in standard ARPA format, designed by Doug Paul while he was at MITRE.
+
+The code that was used to produce this language model is available in Open Source.
+Please visit http://www.speech.cs.cmu.edu/tools/ for more information
+
+The (fixed) discount mass is 0.5. The backoffs are computed using the ratio method.
+This model based on a corpus of 19 sentences and 21 words
+
+\data\
+ngram 1=21
+ngram 2=38
+ngram 3=19
+
+\1-grams:
+-0.7782 </s> -0.3010
+-0.7782 <s> -0.2218
+-2.0569 EIGHT -0.2218
+-2.0569 FIVE -0.2218
+-2.0569 FOUR -0.2218
+-2.0569 HELLO -0.2218
+-2.0569 NINE -0.2218
+-2.0569 NO -0.2218
+-2.0569 NUMBER -0.2218
+-2.0569 O -0.2218
+-2.0569 ONE -0.2218
+-2.0569 PATRICK -0.2218
+-2.0569 REZA -0.2218
+-2.0569 ROOM -0.2218
+-2.0569 SEVEN -0.2218
+-2.0569 SIX -0.2218
+-2.0569 THREE -0.2218
+-2.0569 TOM -0.2218
+-2.0569 TWO -0.2218
+-2.0569 YES -0.2218
+-2.0569 ZERO -0.2218
+
+\2-grams:
+-1.5798 <s> EIGHT 0.0000
+-1.5798 <s> FIVE 0.0000
+-1.5798 <s> FOUR 0.0000
+-1.5798 <s> HELLO 0.0000
+-1.5798 <s> NINE 0.0000
+-1.5798 <s> NO 0.0000
+-1.5798 <s> NUMBER 0.0000
+-1.5798 <s> O 0.0000
+-1.5798 <s> ONE 0.0000
+-1.5798 <s> PATRICK 0.0000
+-1.5798 <s> REZA 0.0000
+-1.5798 <s> ROOM 0.0000
+-1.5798 <s> SEVEN 0.0000
+-1.5798 <s> SIX 0.0000
+-1.5798 <s> THREE 0.0000
+-1.5798 <s> TOM 0.0000
+-1.5798 <s> TWO 0.0000
+-1.5798 <s> YES 0.0000
+-1.5798 <s> ZERO 0.0000
+-0.3010 EIGHT </s> -0.3010
+-0.3010 FIVE </s> -0.3010
+-0.3010 FOUR </s> -0.3010
+-0.3010 HELLO </s> -0.3010
+-0.3010 NINE </s> -0.3010
+-0.3010 NO </s> -0.3010
+-0.3010 NUMBER </s> -0.3010
+-0.3010 O </s> -0.3010
+-0.3010 ONE </s> -0.3010
+-0.3010 PATRICK </s> -0.3010
+-0.3010 REZA </s> -0.3010
+-0.3010 ROOM </s> -0.3010
+-0.3010 SEVEN </s> -0.3010
+-0.3010 SIX </s> -0.3010
+-0.3010 THREE </s> -0.3010
+-0.3010 TOM </s> -0.3010
+-0.3010 TWO </s> -0.3010
+-0.3010 YES </s> -0.3010
+-0.3010 ZERO </s> -0.3010
+
+\3-grams:
+-0.3010 <s> EIGHT </s>
+-0.3010 <s> FIVE </s>
+-0.3010 <s> FOUR </s>
+-0.3010 <s> HELLO </s>
+-0.3010 <s> NINE </s>
+-0.3010 <s> NO </s>
+-0.3010 <s> NUMBER </s>
+-0.3010 <s> O </s>
+-0.3010 <s> ONE </s>
+-0.3010 <s> PATRICK </s>
+-0.3010 <s> REZA </s>
+-0.3010 <s> ROOM </s>
+-0.3010 <s> SEVEN </s>
+-0.3010 <s> SIX </s>
+-0.3010 <s> THREE </s>
+-0.3010 <s> TOM </s>
+-0.3010 <s> TWO </s>
+-0.3010 <s> YES </s>
+-0.3010 <s> ZERO </s>
+
+\end\

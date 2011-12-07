@@ -1,13 +1,13 @@
 <package>
-  <description brief="rutler_interface">
+  <description brief="node_node">
 
-     rutler_interface
+     node_node
 
   </description>
   <author>Jonathan Kim</author>
   <license>BSD</license>
   <review status="unreviewed" notes=""/>
-  <url>http://ros.org/wiki/rutler_interface</url>
+  <url>http://ros.org/wiki/node_node</url>
   <depend package="std_msgs"/>
   <depend package="rospy"/>
 
