@@ -1,0 +1,13 @@
+<launch>
+  <node pkg="hokuyo_node" type="hokuyo_node" name="hokuyo_node" output="screen">
+    <!-- <param name="sensor_param" value="param_value" /> -->
+  </node>
+
+  <node pkg="ROSARIA" type="RosAria" name="RosAria" output="screen">
+    <!-- <param name="odom_param" value="param_value" /> -->
+  </node>
+
+  <node pkg="robot_setup_tf" type="tf_rutler" name="tf_rutler" output="screen">
+    <!--<param name="transform_configuration_param" value="param_value" /> -->
+  </node>
+</launch>

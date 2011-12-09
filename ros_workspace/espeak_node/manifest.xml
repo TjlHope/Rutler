@@ -1,0 +1,16 @@
+<package>
+  <description brief="espeak_node">
+
+     espeak_node
+
+  </description>
+  <author>rutler</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/espeak_node</url>
+  <depend package="rospy"/>
+  <depend package="std_msgs"/>
+
+</package>
+
+

@@ -1,0 +1,13 @@
+<launch>
+
+<!--
+  <node pkg="gmapping" type="slam_gmapping" name="gmapping" output="screen">
+    <param name="scan" value="scan" />
+  </node>
+-->
+
+  <node pkg="rviz" type="rviz" name="rviz" output="screen">
+    <param name="display-config" value="rutler\ super\ duper" />
+  </node>
+
+</launch>

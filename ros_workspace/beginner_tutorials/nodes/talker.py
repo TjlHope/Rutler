@@ -8,7 +8,7 @@ def talker():
     rospy.init_node('talker')
     while not rospy.is_shutdown():## and x == 1:
     #if bum == 1:
-	str = "302"
+	str = '{ "move": "301" }'
 	rospy.loginfo(str)
 	pub.publish(String(str))
 	rospy.sleep(1.0)
