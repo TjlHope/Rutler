@@ -35,7 +35,7 @@
 # $Id$
 
 TARGET = $(notdir $(CURDIR))
-INSTALL_DIR = /usr/share/arduino-0017
+INSTALL_DIR = /usr/share/arduino
 # As local libraries are normally in sketchbooks/libraries and the Makefile is
 # normally sketchbooks/$(TARGET)/Makefile
 LIBRARIES_DIRS = ../libraries 
@@ -48,8 +48,8 @@ F_CPU = 16000000
 ############################################################################
 # Below here nothing should be changed...
 
-ARDUINO = $(INSTALL_DIR)/hardware/cores/arduino
-LIBRARIES_DIRS += $(addprefix $(INSTALL_DIR), /hardware/libraries /libraries)
+ARDUINO = $(INSTALL_DIR)/hardware/arduino/cores/arduino
+LIBRARIES_DIRS += $(addprefix $(INSTALL_DIR), /hardware/arduino/libraries /libraries)
 AVR_TOOLS_PATH = /usr/bin
 SRC = $(wildcard $(ARDUINO:%=%/*.c))
 CXXSRC = $(wildcard $(ARDUINO%=%/*.cpp))
