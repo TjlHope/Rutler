@@ -1,5 +1,6 @@
 
 arduino/libraries
+arduino/*/applet
 build
 bin
 old
