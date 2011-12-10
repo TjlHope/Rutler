@@ -16,31 +16,42 @@
 
 #include <Servo.h> 
 #include <ros.h>
-#include <std_msgs/UInt16.h>
+#include <std_msgs/UInt8.h>
 
 ros::NodeHandle  nh;
 
 Servo servo;
 
-void servo_cb( const std_msgs::UInt16& cmd_msg){
-  servo.write(cmd_msg.data); //set servo angle, should be from 0-180  
-  digitalWrite(13, HIGH-digitalRead(13));  //toggle led  
+std_msgs::UInt8 position;
+int angle = 90;
+
+void servo_cb(const std_msgs::UInt8& cmd_msg)
+{
+	angle = servo.read();
+	angle += int(cmd_msg.data) - 90;
+	servo.write(angle);
+	digitalWrite(13, HIGH-digitalRead(13));
 }
 
 
-ros::Subscriber<std_msgs::UInt16> sub("servo", servo_cb);
+ros::Subscriber<std_msgs::UInt8> sub("servo", servo_cb);
+ros::Publisher pub("servo_position", &position);
 
-void setup(){
-  pinMode(13, OUTPUT);
+void setup()
+{
+	pinMode(13, OUTPUT);
 
-  nh.initNode();
-  nh.subscribe(sub);
-  
-  servo.attach(9); //attach it to pin 9
+	nh.initNode();
+	nh.subscribe(sub);
+
+	servo.attach(9); //attach it to pin 9
 }
 
-void loop(){
-  nh.spinOnce();
-  delay(1);
+void loop()
+{
+	nh.spinOnce();
+	position.data = angle;
+	pub.publish(&position);
+	delay(1000);
 }
 
