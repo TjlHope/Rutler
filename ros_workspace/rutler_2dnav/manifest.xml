@@ -1,0 +1,18 @@
+<package>
+  <description brief="rutler_2dnav">
+
+     rutler_2dnav
+
+  </description>
+  <author>rutler</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/rutler_2dnav</url>
+  <depend package="move_base"/>
+  <depend package="robot_setup_tf"/>
+  <depend package="ROSARIA"/>
+  <depend package="hokuyo_node"/>
+
+</package>
+
+

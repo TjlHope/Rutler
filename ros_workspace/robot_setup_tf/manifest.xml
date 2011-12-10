@@ -1,0 +1,19 @@
+<package>
+  <description brief="robot_setup_tf">
+
+     robot_setup_tf
+
+  </description>
+  <author>rutler</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/robot_setup_tf</url>
+  <depend package="roscpp"/>
+  <depend package="tf"/>
+  <depend package="geometry_msgs"/>
+  <depend package="nav_msgs"/>
+  <depend package="rospy"/>
+
+</package>
+
+

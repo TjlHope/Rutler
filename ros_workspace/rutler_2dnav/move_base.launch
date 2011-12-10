@@ -1,0 +1,18 @@
+<launch>
+  <master auto="start"/>
+
+  <!-- Run the map server -->
+  <node name="map_server" pkg="map_server" type="map_server" args="/home/rutler/RUTLER_MAPS/lvl6.pgm 0.050000"/>
+
+  <!--- Run AMCL -->
+  <include file="$(find amcl)/examples/amcl_omni.launch" />
+
+  <node pkg="move_base" type="move_base" respawn="false" name="move_base" output="screen">
+    <remap from="cmd_vel" to="RosAria/cmd_vel"/>
+    <rosparam file="$(find rutler_2dnav)/costmap_common_params.yaml" command="load" ns="global_costmap" />
+    <rosparam file="$(find rutler_2dnav)/costmap_common_params.yaml" command="load" ns="local_costmap" />
+    <rosparam file="$(find rutler_2dnav)/local_costmap_params.yaml" command="load" />
+    <rosparam file="$(find rutler_2dnav)/global_costmap_params.yaml" command="load" />
+    <rosparam file="$(find rutler_2dnav)/base_local_planner_params.yaml" command="load" />
+  </node>
+</launch>
