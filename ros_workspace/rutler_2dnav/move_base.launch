@@ -2,8 +2,8 @@
   <master auto="start"/>
 
   <!-- Run the map server -->
-  <node name="map_server" pkg="map_server" type="map_server" args="/home/rutler/RUTLER_MAPS/lvl6.pgm 0.050000"/>
-
+    <node name="map_server" pkg="map_server" type="map_server" args="/home/rutler/RUTLER_MAPS/lvl6.pgm 0.050000"/> -->
+  <!--  <node name="map_server" pkg="map_server" type="map_server" args="/home/rutler/lvl5dummy_1.pbm 0.050000"/> -->
   <!--- Run AMCL -->
   <include file="$(find amcl)/examples/amcl_omni.launch" />
 

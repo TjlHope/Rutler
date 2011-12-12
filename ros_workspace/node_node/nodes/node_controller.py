@@ -35,6 +35,7 @@ class NodeProcess(object):
                 line = self.proc.stdout.readline()
                 out = json.loads(line)
                 self.pub.publish(String(json.dumps(out)))
+                self.move.publish(String(json.dumps(out)))
                 rospy.loginfo("JSON: %s", out)
             except ValueError:
                 out = line
@@ -50,10 +51,11 @@ def watcher(node):
     rospy.init_node('watcher', anonymous=True)
     rospy.Subscriber("interface", String, node.sendCommand)
     node.pub = rospy.Publisher('user_input', String)
+    node.move = rospy.Publisher('move_rutler', String)
     rospy.spin()
 
 if __name__ == '__main__':
     node = NodeProcess(name=
-        'node /home/jkimbo/www/rutler-interface/app.js')
+        'node /home/rutler/rutler-interface/app.js')
     watcher(node)
 

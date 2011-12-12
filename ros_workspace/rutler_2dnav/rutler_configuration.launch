@@ -1,6 +1,11 @@
 <launch>
   <node pkg="hokuyo_node" type="hokuyo_node" name="hokuyo_node" output="screen">
     <!-- <param name="sensor_param" value="param_value" /> -->
+    <!-- <param name="cluster" value="1" /> -->
+<!--    <param name="skip" value="1" /> -->
+<!--    <param name="intensity" value="false" /> -->
+    <param name="min_ang" value="-1.7" />
+    <param name="max_ang" value="1.7" />
   </node>
 
   <node pkg="ROSARIA" type="RosAria" name="RosAria" output="screen">

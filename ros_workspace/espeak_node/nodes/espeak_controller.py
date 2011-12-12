@@ -39,5 +39,5 @@ def watcher(node):
     rospy.spin()
 
 if __name__ == '__main__':
-    node = EspeakProcess(name='espeak -s 150 -v en-rp')
+    node = EspeakProcess(name='espeak -s 130 -v en-sc')
     watcher(node)
