@@ -1,0 +1,15 @@
+<package>
+  <description brief="kinect_msgs">
+
+     kinect_msgs
+
+  </description>
+  <author></author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/kinect_msgs</url>
+  <depend package="geometry_msgs"/>
+
+</package>
+
+

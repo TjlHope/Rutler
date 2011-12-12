@@ -30,12 +30,14 @@ done
 if [ -f "/opt/ros/electric/setup.${ext}" ]
 then
     . "/opt/ros/electric/setup.${ext}"	# source setup script
-    [ -d "/opt/ros/electric/stacks" ] &&
+    [ -d "/opt/ros/electric/stacks" ] && {
+	stacks_path="/opt/ros/electric/stacks"
 	for d in /opt/ros/electric/stacks/*
 	do
 	    [ -d "${d}" ] &&
 		stacks="${stacks}:${d}"		# add to stacks path
 	done
+    }
 else
     while [ "${path}" != '/' ]
     do
@@ -44,21 +46,25 @@ else
 	if [ -f "${path}/ros/electric/ros/setup.${ext}" ]
 	then
 	    . "${path}/ros/electric/ros/setup.${ext}"	# source setup script
-	    [ -d "${path}/ros/electric/stacks" ] &&
+	    [ -d "${path}/ros/electric/stacks" ] && {
+		stacks_path="${path}/ros/electric/stacks"
 		for d in ${path}/ros/electric/stacks/*
 		do
 		    [ -d "${d}" ] &&
 			stacks="${stacks}:${d}"		# add to stacks path
 		done
+	    }
 	elif [ -f "${path}/ros/setup.${ext}" ]
 	then
 	    . "${path}/ros/setup.${ext}"		# source setup script
-	    [ -d "${path}/stacks" ] &&
-		for d in ${path}/stacks/*
+	    [ -d "${path}/stacks" ] && {
+		stacks_path="${path}/stacks"
+		for d in ${stacks_path}/*
 		do
 		    [ -d "${d}" ] &&
 			stacks="${stacks}:${d}"		# add to stacks path
 		done
+	    }
 	else
 	    # Haven't found it so go to next iteration
 	    continue
@@ -68,8 +74,8 @@ else
 fi
 
 # new PATHS to add to the start of ROS env vars
-ws="${script_dir}:${path}"
-pp="${local_stacks#:}${stacks}"	# seperatator (:) in $stacks
+ws="${script_dir}${stacks_path+:}${stacks_path}"
+pp="${script_dir}${stacks_path+:}${stacks_path}${local_stacks}${stacks}"
 
 export ROS_WORKSPACE="${ws}${ROS_WORKSPACE+:}${ROS_WORKSPACE#${ws}}"
 export ROS_PACKAGE_PATH="${pp}${ROS_PACKAGE_PATH+:}${ROS_PACKAGE_PATH#${pp}}"
