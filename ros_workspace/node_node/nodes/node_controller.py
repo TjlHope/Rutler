@@ -50,6 +50,7 @@ class NodeProcess(object):
 def watcher(node):
     rospy.init_node('watcher', anonymous=True)
     rospy.Subscriber("interface", String, node.sendCommand)
+    rospy.Subscriber("rutler_status", String, node.sendCommand)
     node.pub = rospy.Publisher('user_input', String)
     node.move = rospy.Publisher('move_rutler', String)
     rospy.spin()
