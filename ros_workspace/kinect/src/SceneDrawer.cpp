@@ -27,10 +27,6 @@
 #include <math.h>
 #include <cmath>
 
-// Ros setup
-#include "ros/ros.h"
-#include "kinect_msgs/Users.h"
-
 //#define PI 3.14159265
 
 #define _POSIX_SOURCE 1 /* POSIX compliant source */
@@ -282,6 +278,7 @@ const XnChar* GetPoseErrorString(XnPoseDetectionStatus error)
 }
 
 
+// redefine to take in ros::Publisher
 void DrawDepthMap(const xn::DepthMetaData& dmd, const xn::SceneMetaData& smd, ros::Publisher publisher)
 {
 	static bool bInitialized = false;	

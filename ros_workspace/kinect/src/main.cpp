@@ -72,6 +72,10 @@ XnBool g_bRecord = false;
 
 XnBool g_bQuit = false;
 
+// ROS Publisher needs to be global because the glutDisplay func can't take any
+// arguments.
+extern ros::Publisher user_pub;
+
 //---------------------------------------------------------------------------
 // Code
 //---------------------------------------------------------------------------
@@ -222,7 +226,7 @@ void LoadCalibration()
 }
 
 // this function is called each frame
-void glutDisplay (ros::Publisher publisher)
+void glutDisplay (void)
 {
 
 	glClear (GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -252,7 +256,8 @@ void glutDisplay (ros::Publisher publisher)
 	// Process the data
 	g_DepthGenerator.GetMetaData(depthMD);
 	g_UserGenerator.GetUserPixels(0, sceneMD);
-	DrawDepthMap(depthMD, sceneMD, publisher);
+	// redefine to take in ros::Publisher
+	DrawDepthMap(depthMD, sceneMD, user_pub);
 
 #ifndef USE_GLES
 	glutSwapBuffers();
@@ -339,12 +344,6 @@ void glInit (int * pargc, char ** argv)
 
 int main(int argc, char **argv)
 {
-	// ros setup
-	ros::init(argc, argv, "kinect_sensor");
-	ros::NodeHandle kinect_node;
-	ros::Publisher user_pub = kinect_node.advertise<kinect_msgs::Users>("kinect_users", 1000);
-	ros::Rate loop_rate(10)
-
 	XnStatus nRetVal = XN_STATUS_OK;
 
 	if (argc > 1)
@@ -467,9 +466,15 @@ int main(int argc, char **argv)
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
 
+	// ros setup
+	ros::init(argc, argv, "kinect_sensor");
+	ros::NodeHandle kinect_node;
+	ros::Publisher user_pub = kinect_node.advertise<kinect_msgs::Users>("kinect_users", 1000);
+	ros::Rate loop_rate(10);
+
 	while (!g_bQuit && ros::ok())
 	{
-		glutDisplay(user_pub);
+		glutDisplay();
 		eglSwapBuffers(display, surface);
 
 		// ros flow control

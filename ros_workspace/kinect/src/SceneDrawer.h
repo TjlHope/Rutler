@@ -24,7 +24,12 @@
 
 #include <ni/XnCppWrapper.h>
 
-void DrawDepthMap(const xn::DepthMetaData& dmd, const xn::SceneMetaData& smd);
+// Ros setup
+#include "ros/ros.h"
+#include "kinect_msgs/Users.h"
+
+// redefine to take in ros::Publisher
+void DrawDepthMap(const xn::DepthMetaData& dmd, const xn::SceneMetaData& smd, ros::Publisher publisher);
 
 void XN_CALLBACK_TYPE MyCalibrationInProgress(xn::SkeletonCapability& capability, XnUserID id, XnCalibrationStatus calibrationError, void* pCookie);
 void XN_CALLBACK_TYPE MyPoseInProgress(xn::PoseDetectionCapability& capability, const XnChar* strPose, XnUserID id, XnPoseDetectionStatus poseError, void* pCookie);
