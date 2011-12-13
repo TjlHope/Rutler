@@ -1,0 +1,18 @@
+<package>
+  <description brief="gepp_kinect">
+
+     gepp_kinect
+
+  </description>
+  <author></author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/gepp_kinect</url>
+  <depend package="rospy"/>
+  <depend package="roscpp"/>
+  <depend package="std_msgs"/>
+  <depend package="kinect_msgs"/>
+
+</package>
+
+

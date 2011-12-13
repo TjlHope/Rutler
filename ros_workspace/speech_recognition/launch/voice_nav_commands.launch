@@ -1,0 +1,19 @@
+<launch>
+
+  <node name="speech_names" pkg="pocketsphinx" type="recognizer.py" output="screen">
+    <param name="lm" value="$(find speech_recognition)/config/names/names.lm"/>
+    <param name="dict" value="$(find speech_recognition)/config/names/names.dic"/>
+  </node>
+
+  <node name="speech_menu" pkg="pocketsphinx" type="recognizer.py" output="screen">
+    <param name="lm" value="$(find speech_recognition)/config/menu/menu.lm"/>
+    <param name="dict" value="$(find speech_recognition)/config/menu/menu.dic"/>
+  </node>
+
+  <node name="speech_rooms" pkg="pocketsphinx" type="recognizer.py" output="screen">
+    <param name="lm" value="$(find speech_recognition)/config/rooms/rooms.lm"/>
+    <param name="dict" value="$(find speech_recognition)/config/rooms/rooms.dic"/>
+  </node>
+
+  
+</launch>

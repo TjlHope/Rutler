@@ -1,0 +1,42 @@
+dr
+professor
+prof
+mr
+mrs
+miss
+peter cheung
+yiannis demiris
+tom pike
+christos bouganis
+alessandro astolfi
+mike brookes
+javier barria
+thomas clarke
+pier luigi dragotti
+zahid durrani
+kristel fobelets
+tim green
+andrew holmes
+imad jaimoukha
+paul mitcheson
+patrick naylor
+papavassiliou 
+jeremy pitt
+richard syms
+eric yeatman
+chris toumazou
+kerrigan
+kin leung
+thanassis manikas
+mustafa gurcan
+kay hancox
+christine allwright
+clare drysdale
+yes
+no
+room number
+email address
+timetable
+undergraduate office
+undergrad
+head of department

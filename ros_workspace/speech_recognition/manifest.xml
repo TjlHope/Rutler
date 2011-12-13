@@ -1,0 +1,18 @@
+<package>
+  <description brief="speech_recognition">
+
+     speech_recognition
+
+  </description>
+  <author>Patrick Chen</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/speech_recognition</url>
+  <depend package="std_msgs"/>
+  <depend package="rospy"/>
+  <depend package="roscpp"/>
+  <depend package="pocketsphinx"/>
+
+</package>
+
+

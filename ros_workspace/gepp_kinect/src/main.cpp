@@ -22,11 +22,11 @@
 //---------------------------------------------------------------------------
 // Includes
 //---------------------------------------------------------------------------
-#include <ni/XnOpenNI.h>
-#include <ni/XnCodecIDs.h>
-#include <ni/XnCppWrapper.h>
+#include <XnOpenNI.h>
+#include <XnCodecIDs.h>
+#include <XnCppWrapper.h>
 #include "SceneDrawer.h"
-#include <ni/XnPropNames.h>
+#include <XnPropNames.h>
 
 //#include "ros/ros.h"
 //#include "kinect_msgs/Users.h"
