@@ -28,8 +28,8 @@
 #include "SceneDrawer.h"
 #include <ni/XnPropNames.h>
 
-#include "ros/ros.h"
-#include "kinect_msgs/Users.h"
+//#include "ros/ros.h"
+//#include "kinect_msgs/Users.h"
 
 //---------------------------------------------------------------------------
 // Globals
