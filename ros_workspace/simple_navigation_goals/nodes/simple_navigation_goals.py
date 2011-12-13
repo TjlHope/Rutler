@@ -182,11 +182,16 @@ def listener():
     rospy.Subscriber("move_rutler", String, callback)
     rospy.loginfo("%s", String)
 
+    status = rospy.Publisher("rutler_status", String)
+
     # END
     #rospy.spin()
     while not rospy.is_shutdown():##and x == 1:
         if client:
             rospy.loginfo('state: %s', goal_state[client.get_state()])
+            status.publish(
+            '{"status": "'+goal_state[client.get_state()]+'"}'
+            )
             rospy.loginfo('result: %s', client.get_result())
             rospy.sleep(5.0)
     print "ROS no longer running, cancel goals"
