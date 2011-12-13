@@ -157,7 +157,7 @@ void glPrintString(void *font, char *str)
 }
 #endif
 
-XnFloat sTimax1x2(XnPoint3D pt/*[]*/)
+XnFloat Stimax1x2(XnPoint3D pt/*[]*/)
 {
 	XnFloat Stimapos;
 	XnFloat Stimavel;
@@ -174,7 +174,7 @@ XnFloat sTimax1x2(XnPoint3D pt/*[]*/)
 	return Stimavel;
 }
 
-void SendInfo(XnUserID player, XnSkeletonJoint eJoint1, XnSkeletonJoint eJoint2, int fd)
+void SendInfo(XnUserID player, XnSkeletonJoint eJoint1, XnSkeletonJoint eJoint2)
 {
 	XnSkeletonJointPosition joint1, joint2;
 	g_UserGenerator.GetSkeletonCap().GetSkeletonJointPosition(player, eJoint1, joint1);
@@ -279,7 +279,7 @@ const XnChar* GetPoseErrorString(XnPoseDetectionStatus error)
 
 
 // redefine to take in ros::Publisher
-void DrawDepthMap(const xn::DepthMetaData& dmd, const xn::SceneMetaData& smd, ros::Publisher publisher)
+void DrawDepthMap(const xn::DepthMetaData& dmd, const xn::SceneMetaData& smd, ros::Publisher& publisher)
 {
 	static bool bInitialized = false;	
 	static GLuint depthTexID;
@@ -292,9 +292,6 @@ void DrawDepthMap(const xn::DepthMetaData& dmd, const xn::SceneMetaData& smd, ro
 	float bottomRightX;
 	float texXpos;
 	float texYpos;
-
-	int fd;
-	fd = serial_init();
 
 	if(!bInitialized)
 	{
@@ -422,8 +419,10 @@ void DrawDepthMap(const xn::DepthMetaData& dmd, const xn::SceneMetaData& smd, ro
 	XnUserID aUsers[15];
 	XnUInt16 nUsers = 15;
 	g_UserGenerator.GetUsers(aUsers, nUsers);
+
 	// ROS Users message
-	Users users;
+	kinect_msgs::Users users;
+
 	for (int i = 0; i < nUsers; ++i)
 	{
 #ifndef USE_GLES
@@ -441,13 +440,13 @@ void DrawDepthMap(const xn::DepthMetaData& dmd, const xn::SceneMetaData& smd, ro
 
 			// Populate ROS Users message:
 			if(com.X != 0 && com.Y != 0 && com.Z != 0)
-				users[i].active = 1;
+				users.user[i].active = 1;
 			else
-				users[i].active = 0;
-			users[i].position.x = com.X
-			users[i].position.y = com.Y
-			users[i].position.y = com.Y
-			users[i].velocity = vel
+				users.user[i].active = 0;
+			users.user[i].position.x = com.X;
+			users.user[i].position.y = com.Y;
+			users.user[i].position.y = com.Y;
+			users.user[i].velocity = vel;
 
 			xnOSMemSet(strLabel, 0, sizeof(strLabel));
 			if (!g_bPrintState)
@@ -482,7 +481,7 @@ void DrawDepthMap(const xn::DepthMetaData& dmd, const xn::SceneMetaData& smd, ro
 #ifndef USE_GLES
 			glBegin(GL_LINES);
 #endif			
-			SendInfo(aUsers[i], XN_SKEL_TORSO,XN_SKEL_HEAD, fd);
+			SendInfo(aUsers[i], XN_SKEL_TORSO,XN_SKEL_HEAD);
 			
 			glColor4f(1-Colors[aUsers[i]%nColors][0], 1-Colors[aUsers[i]%nColors][1], 1-Colors[aUsers[i]%nColors][2], 1);
 			DrawLimb(aUsers[i], XN_SKEL_HEAD, XN_SKEL_NECK);
@@ -512,7 +511,7 @@ void DrawDepthMap(const xn::DepthMetaData& dmd, const xn::SceneMetaData& smd, ro
 #endif
 		}
 	}
-	publisher.publish(users)
+	publisher.publish(users);
 }
 
 
