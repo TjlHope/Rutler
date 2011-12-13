@@ -1,11 +1,14 @@
 
+ROS_NOBUILD
 arduino/libraries
 arduino/*/applet
 build
 bin
+lib
 old
 msg_gen
 srv_gen
+src/*_msgs
 *.a
 *.o
 *.pyc

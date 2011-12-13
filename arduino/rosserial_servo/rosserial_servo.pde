@@ -12,9 +12,14 @@
  * http://www.arduino.cc/en/Reference/Servo
  */
 
-#include <WProgram.h>
+// Try and hack roslib to work with make
+#define __AVR_ATmega1280__
+#include <HardwareSerial.h>
+extern HardwareSerial Serial = Serial1;
 
+#include <WProgram.h>
 #include <Servo.h> 
+
 #include <ros.h>
 #include <std_msgs/Int8.h>
 
@@ -22,42 +27,56 @@ ros::NodeHandle  nh;
 
 Servo servo;
 
-std_msgs::Int8 position;
 int angle = 90;
+int target = angle;
 
-ros::Publisher pub("servo_position", &position);
+std_msgs::Int8 position;
+std_msgs::Int8 increment;
+
+ros::Publisher pos_pub("servo_position", &position);
+ros::Publisher inc_pub("servo_increment", &increment);
 
 void servo_cb(const std_msgs::Int8& cmd_msg)
 {
 	angle = servo.read();
 	int offset = int(cmd_msg.data);
-        angle += offset;
-        position.data = offset;
-        pub.publish(&position);
-	servo.write(angle);
+	increment.data = offset;
+	inc_pub.publish(&increment);
+	target = angle + offset;
 	digitalWrite(13, HIGH-digitalRead(13));
 }
 
-
 ros::Subscriber<std_msgs::Int8> sub("servo", servo_cb);
+
 
 void setup()
 {
 	pinMode(13, OUTPUT);
 
 	nh.initNode();
-        nh.advertise(pub);
+	nh.advertise(pos_pub);
+	nh.advertise(inc_pub);
 	nh.subscribe(sub);
 
 	servo.attach(9); //attach it to pin 9
-        servo.write(angle);
+	servo.write(angle);
 }
 
 void loop()
 {
 	nh.spinOnce();
+    while(angle != target)
+    {
+		angle = servo.read();
+		if(angle < target)
+			angle += 1;
+		else if(angle > target)
+			angle -= 1;
+		servo.write(angle);
+		delay(50);
+    }
 	position.data = angle;
-	pub.publish(&position);
-	delay(1000);
+	pos_pub.publish(&position);
+	delay(50);
 }
 

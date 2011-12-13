@@ -35,7 +35,7 @@
 # $Id$
 
 TARGET = $(notdir $(CURDIR))
-INSTALL_DIR = /usr/share/arduino
+INSTALL_DIR = $(wildcard /usr/share/arduino*)
 # As local libraries are normally in sketchbooks/libraries and the Makefile is
 # normally sketchbooks/$(TARGET)/Makefile
 LIBRARIES_DIRS = ../libraries 
@@ -47,6 +47,12 @@ F_CPU = 16000000
 
 ############################################################################
 # Below here nothing should be changed...
+
+# Create a symlink for gentoo style distros, so it works with both them and
+# ubuntu.
+$(shell [ -d $(INSTALL_DIR)/hardware/cores ] && \
+	[ ! -d $(INSTALL_DIR)/hardware/arduino ] && \
+	ln -s ./ $(INSTALL_DIR)/hardware/arduino)
 
 ARDUINO = $(INSTALL_DIR)/hardware/arduino/cores/arduino
 LIBRARIES_DIRS += $(addprefix $(INSTALL_DIR), /hardware/arduino/libraries /libraries)
