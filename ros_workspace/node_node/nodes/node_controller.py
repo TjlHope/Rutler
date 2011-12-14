@@ -29,6 +29,13 @@ class NodeProcess(object):
             rospy.loginfo(rospy.get_name()+
                         " I heard %s",data.data)
 
+    def sendRecognition(self, data):
+        if data.data:
+            output = '{"recog": "'+data.data+'"}'
+            self.proc.stdin.write(output)
+            rospy.loginfo(rospy.get_name()+
+                        " I heard %s",data.data)
+
     def get_output(self):
         while not rospy.is_shutdown():
             try:
@@ -51,12 +58,13 @@ def watcher(node):
     rospy.init_node('watcher', anonymous=True)
     rospy.Subscriber("interface", String, node.sendCommand)
     rospy.Subscriber("rutler_status", String, node.sendCommand)
+    rospy.Subscriber("speech_names/output", String, node.sendRecognition)
     node.pub = rospy.Publisher('user_input', String)
     node.move = rospy.Publisher('move_rutler', String)
     rospy.spin()
 
 if __name__ == '__main__':
     node = NodeProcess(name=
-        'node /home/rutler/rutler-interface/app.js')
+        'node /home/jkimbo/www/rutler-interface/app.js')
     watcher(node)
 
