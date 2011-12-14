@@ -1,15 +1,28 @@
-// openni_tracker.cpp
+/****************************************************************************
+ * user_tracker.cpp
+****************************************************************************/
+
+//---------------------------------------------------------------------------
+// Includes
+//---------------------------------------------------------------------------
 
 #include <ros/ros.h>
 #include <ros/package.h>
 #include <tf/transform_broadcaster.h>
 #include <kdl/frames.hpp>
 
+#include "process_users.h"
+#include "kinect/Users.h"
+
 #include <XnOpenNI.h>
 #include <XnCodecIDs.h>
 #include <XnCppWrapper.h>
 
 using std::string;
+
+//---------------------------------------------------------------------------
+// Variable Definitions
+//---------------------------------------------------------------------------
 
 xn::Context        g_Context;
 xn::DepthGenerator g_DepthGenerator;
@@ -18,8 +31,18 @@ xn::UserGenerator  g_UserGenerator;
 XnBool g_bNeedPose   = FALSE;
 XnChar g_strPose[20] = "";
 
-void XN_CALLBACK_TYPE User_NewUser(xn::UserGenerator& generator, XnUserID nId, void* pCookie) {
+#define NUSERS 15
+kinect::Users kinectUsers;
+
+//---------------------------------------------------------------------------
+// Function Definitions
+//---------------------------------------------------------------------------
+
+void XN_CALLBACK_TYPE User_NewUser(xn::UserGenerator& generator, XnUserID nId, void* pCookie)
+{
 	ROS_INFO("New User %d", nId);
+
+	kinectUsers.user[nId].active = TRUE;
 
 	if (g_bNeedPose)
 		g_UserGenerator.GetPoseDetectionCap().StartPoseDetection(g_strPose, nId);
@@ -27,20 +50,27 @@ void XN_CALLBACK_TYPE User_NewUser(xn::UserGenerator& generator, XnUserID nId, v
 		g_UserGenerator.GetSkeletonCap().RequestCalibration(nId, TRUE);
 }
 
-void XN_CALLBACK_TYPE User_LostUser(xn::UserGenerator& generator, XnUserID nId, void* pCookie) {
+void XN_CALLBACK_TYPE User_LostUser(xn::UserGenerator& generator, XnUserID nId, void* pCookie)
+{
+	kinectUsers.user[nId].active = FALSE;;
+
 	ROS_INFO("Lost user %d", nId);
 }
 
-void XN_CALLBACK_TYPE UserCalibration_CalibrationStart(xn::SkeletonCapability& capability, XnUserID nId, void* pCookie) {
+void XN_CALLBACK_TYPE UserCalibration_CalibrationStart(xn::SkeletonCapability& capability, XnUserID nId, void* pCookie)
+{
 	ROS_INFO("Calibration started for user %d", nId);
 }
 
-void XN_CALLBACK_TYPE UserCalibration_CalibrationEnd(xn::SkeletonCapability& capability, XnUserID nId, XnBool bSuccess, void* pCookie) {
-	if (bSuccess) {
+void XN_CALLBACK_TYPE UserCalibration_CalibrationEnd(xn::SkeletonCapability& capability, XnUserID nId, XnBool bSuccess, void* pCookie)
+{
+	if (bSuccess)
+	{
 		ROS_INFO("Calibration complete, start tracking user %d", nId);
 		g_UserGenerator.GetSkeletonCap().StartTracking(nId);
 	}
-	else {
+	else
+	{
 		ROS_INFO("Calibration failed for user %d", nId);
 		if (g_bNeedPose)
 			g_UserGenerator.GetPoseDetectionCap().StartPoseDetection(g_strPose, nId);
@@ -49,13 +79,15 @@ void XN_CALLBACK_TYPE UserCalibration_CalibrationEnd(xn::SkeletonCapability& cap
 	}
 }
 
-void XN_CALLBACK_TYPE UserPose_PoseDetected(xn::PoseDetectionCapability& capability, XnChar const* strPose, XnUserID nId, void* pCookie) {
+void XN_CALLBACK_TYPE UserPose_PoseDetected(xn::PoseDetectionCapability& capability, XnChar const* strPose, XnUserID nId, void* pCookie)
+{
     ROS_INFO("Pose %s detected for user %d", strPose, nId);
     g_UserGenerator.GetPoseDetectionCap().StopPoseDetection(nId);
     g_UserGenerator.GetSkeletonCap().RequestCalibration(nId, TRUE);
 }
 
-void publishTransform(XnUserID const& user, XnSkeletonJoint const& joint, string const& frame_id, string const& child_frame_id) {
+void publishTransform(XnUserID const& user, XnSkeletonJoint const& joint, string const& frame_id, string const& child_frame_id)
+{
     static tf::TransformBroadcaster br;
 
     XnSkeletonJointPosition joint_position;
@@ -93,37 +125,47 @@ void publishTransform(XnUserID const& user, XnSkeletonJoint const& joint, string
     br.sendTransform(tf::StampedTransform(transform, ros::Time::now(), frame_id, child_frame_no));
 }
 
-void publishTransforms(const std::string& frame_id) {
-    XnUserID users[15];
-    XnUInt16 users_count = 15;
+void publishTransforms(const std::string& frame_id, ros::Publisher& publisher)
+{
+	XnUserID users[NUSERS];
+	XnUInt16 users_count = NUSERS;
     g_UserGenerator.GetUsers(users, users_count);
 
-    for (int i = 0; i < users_count; ++i) {
+    for (int i = 0; i < users_count; ++i)
+	{
         XnUserID user = users[i];
+		
+		XnPoint3D point;
+		g_UserGenerator.GetCoM(users[i], point);
+		g_DepthGenerator.ConvertRealWorldToProjective(1, &point, &point);
+		
+		estimateVelocity(point, kinectUsers.user[i]);
+
+		// original sceleton transform publishing.
         if (!g_UserGenerator.GetSkeletonCap().IsTracking(user))
-            continue;
+		{
+			publishTransform(user, XN_SKEL_HEAD,           frame_id, "head");
+			publishTransform(user, XN_SKEL_NECK,           frame_id, "neck");
+			publishTransform(user, XN_SKEL_TORSO,          frame_id, "torso");
 
+			publishTransform(user, XN_SKEL_LEFT_SHOULDER,  frame_id, "left_shoulder");
+			publishTransform(user, XN_SKEL_LEFT_ELBOW,     frame_id, "left_elbow");
+			publishTransform(user, XN_SKEL_LEFT_HAND,      frame_id, "left_hand");
 
-        publishTransform(user, XN_SKEL_HEAD,           frame_id, "head");
-        publishTransform(user, XN_SKEL_NECK,           frame_id, "neck");
-        publishTransform(user, XN_SKEL_TORSO,          frame_id, "torso");
+			publishTransform(user, XN_SKEL_RIGHT_SHOULDER, frame_id, "right_shoulder");
+			publishTransform(user, XN_SKEL_RIGHT_ELBOW,    frame_id, "right_elbow");
+			publishTransform(user, XN_SKEL_RIGHT_HAND,     frame_id, "right_hand");
 
-        publishTransform(user, XN_SKEL_LEFT_SHOULDER,  frame_id, "left_shoulder");
-        publishTransform(user, XN_SKEL_LEFT_ELBOW,     frame_id, "left_elbow");
-        publishTransform(user, XN_SKEL_LEFT_HAND,      frame_id, "left_hand");
+			publishTransform(user, XN_SKEL_LEFT_HIP,       frame_id, "left_hip");
+			publishTransform(user, XN_SKEL_LEFT_KNEE,      frame_id, "left_knee");
+			publishTransform(user, XN_SKEL_LEFT_FOOT,      frame_id, "left_foot");
 
-        publishTransform(user, XN_SKEL_RIGHT_SHOULDER, frame_id, "right_shoulder");
-        publishTransform(user, XN_SKEL_RIGHT_ELBOW,    frame_id, "right_elbow");
-        publishTransform(user, XN_SKEL_RIGHT_HAND,     frame_id, "right_hand");
-
-        publishTransform(user, XN_SKEL_LEFT_HIP,       frame_id, "left_hip");
-        publishTransform(user, XN_SKEL_LEFT_KNEE,      frame_id, "left_knee");
-        publishTransform(user, XN_SKEL_LEFT_FOOT,      frame_id, "left_foot");
-
-        publishTransform(user, XN_SKEL_RIGHT_HIP,      frame_id, "right_hip");
-        publishTransform(user, XN_SKEL_RIGHT_KNEE,     frame_id, "right_knee");
-        publishTransform(user, XN_SKEL_RIGHT_FOOT,     frame_id, "right_foot");
+			publishTransform(user, XN_SKEL_RIGHT_HIP,      frame_id, "right_hip");
+			publishTransform(user, XN_SKEL_RIGHT_KNEE,     frame_id, "right_knee");
+			publishTransform(user, XN_SKEL_RIGHT_FOOT,     frame_id, "right_foot");
+		}
     }
+	publisher.publish(kinectUsers);
 }
 
 #define CHECK_RC(nRetVal, what)										\
@@ -133,7 +175,8 @@ void publishTransforms(const std::string& frame_id) {
 		return nRetVal;												\
 	}
 
-int main(int argc, char **argv) {
+int main(int argc, char **argv)
+{
     ros::init(argc, argv, "kinnect");
     ros::NodeHandle nh;
 
@@ -145,12 +188,14 @@ int main(int argc, char **argv) {
     CHECK_RC(nRetVal, "Find depth generator");
 
 	nRetVal = g_Context.FindExistingNode(XN_NODE_TYPE_USER, g_UserGenerator);
-	if (nRetVal != XN_STATUS_OK) {
+	if (nRetVal != XN_STATUS_OK)
+	{
 		nRetVal = g_UserGenerator.Create(g_Context);
 		CHECK_RC(nRetVal, "Find user generator");
 	}
 
-	if (!g_UserGenerator.IsCapabilitySupported(XN_CAPABILITY_SKELETON)) {
+	if (!g_UserGenerator.IsCapabilitySupported(XN_CAPABILITY_SKELETON))
+	{
 		ROS_INFO("Supplied user generator doesn't support skeleton");
 		return 1;
 	}
@@ -161,9 +206,11 @@ int main(int argc, char **argv) {
 	XnCallbackHandle hCalibrationCallbacks;
 	g_UserGenerator.GetSkeletonCap().RegisterCalibrationCallbacks(UserCalibration_CalibrationStart, UserCalibration_CalibrationEnd, NULL, hCalibrationCallbacks);
 
-	if (g_UserGenerator.GetSkeletonCap().NeedPoseForCalibration()) {
+	if (g_UserGenerator.GetSkeletonCap().NeedPoseForCalibration())
+	{
 		g_bNeedPose = TRUE;
-		if (!g_UserGenerator.IsCapabilitySupported(XN_CAPABILITY_POSE_DETECTION)) {
+		if (!g_UserGenerator.IsCapabilitySupported(XN_CAPABILITY_POSE_DETECTION))
+		{
 			ROS_INFO("Pose required, but not supported");
 			return 1;
 		}
@@ -181,14 +228,15 @@ int main(int argc, char **argv) {
 
 	ros::Rate r(30);
 
-        
-        ros::NodeHandle pnh("~");
-        string frame_id("openni_depth_frame");
-        pnh.getParam("camera_frame_id", frame_id);
+	ros::NodeHandle pnh("~");
+	string frame_id("openni_depth_frame");
+	pnh.getParam("camera_frame_id", frame_id);
                 
+	ros::Publisher user_pub = nh.advertise<kinect::Users>("kinect_users", 1000);
+
 	while (ros::ok()) {
 		g_Context.WaitAndUpdateAll();
-		publishTransforms(frame_id);
+		publishTransforms(frame_id, user_pub);
 		r.sleep();
 	}
 
