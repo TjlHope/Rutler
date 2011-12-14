@@ -12,7 +12,7 @@
 #include <kdl/frames.hpp>
 
 #include "process_users.h"
-#include "kinect/Users.h"
+//#include "kinect/Users.h"
 
 #include <XnOpenNI.h>
 #include <XnCodecIDs.h>
@@ -32,7 +32,7 @@ XnBool g_bNeedPose   = FALSE;
 XnChar g_strPose[20] = "";
 
 #define NUSERS 15
-kinect::Users kinectUsers;
+kinect::User kinectUsers[NUSERS];
 
 //---------------------------------------------------------------------------
 // Function Definitions
@@ -42,7 +42,11 @@ void XN_CALLBACK_TYPE User_NewUser(xn::UserGenerator& generator, XnUserID nId, v
 {
 	ROS_INFO("New User %d", nId);
 
-	kinectUsers.user[nId].active = TRUE;
+	int idx = nId - 1;
+	kinectUsers[idx].id = nId;
+	kinectUsers[idx].active = TRUE;
+	kinectUsers[idx].pos.x = kinectUsers[idx].pos.y = kinectUsers[idx].pos.z = 0;
+	kinectUsers[idx].vel.x = kinectUsers[idx].vel.y = kinectUsers[idx].vel.z = 0;
 
 	if (g_bNeedPose)
 		g_UserGenerator.GetPoseDetectionCap().StartPoseDetection(g_strPose, nId);
@@ -52,7 +56,8 @@ void XN_CALLBACK_TYPE User_NewUser(xn::UserGenerator& generator, XnUserID nId, v
 
 void XN_CALLBACK_TYPE User_LostUser(xn::UserGenerator& generator, XnUserID nId, void* pCookie)
 {
-	kinectUsers.user[nId].active = FALSE;;
+	int idx = nId - 1;
+	kinectUsers[idx].active = FALSE;
 
 	ROS_INFO("Lost user %d", nId);
 }
@@ -138,11 +143,16 @@ void publishTransforms(const std::string& frame_id, ros::Publisher& publisher)
 		XnPoint3D point;
 		g_UserGenerator.GetCoM(users[i], point);
 		g_DepthGenerator.ConvertRealWorldToProjective(1, &point, &point);
-		
-		estimateVelocity(point, kinectUsers.user[i]);
+
+		int idx = user - 1;
+		if (kinectUsers[idx].active == TRUE)
+		{
+			estimateVelocity(point, kinectUsers[idx]);
+			publisher.publish(kinectUsers[idx]);
+		}
 
 		// original sceleton transform publishing.
-        if (!g_UserGenerator.GetSkeletonCap().IsTracking(user))
+        if (g_UserGenerator.GetSkeletonCap().IsTracking(user))
 		{
 			publishTransform(user, XN_SKEL_HEAD,           frame_id, "head");
 			publishTransform(user, XN_SKEL_NECK,           frame_id, "neck");
@@ -165,7 +175,6 @@ void publishTransforms(const std::string& frame_id, ros::Publisher& publisher)
 			publishTransform(user, XN_SKEL_RIGHT_FOOT,     frame_id, "right_foot");
 		}
     }
-	publisher.publish(kinectUsers);
 }
 
 #define CHECK_RC(nRetVal, what)										\
@@ -232,7 +241,7 @@ int main(int argc, char **argv)
 	string frame_id("openni_depth_frame");
 	pnh.getParam("camera_frame_id", frame_id);
                 
-	ros::Publisher user_pub = nh.advertise<kinect::Users>("kinect_users", 1000);
+	ros::Publisher user_pub = nh.advertise<kinect::User>("kinect_users", 1000);
 
 	while (ros::ok()) {
 		g_Context.WaitAndUpdateAll();
