@@ -80,7 +80,9 @@ pp="${script_dir}${stacks_path+:}${stacks_path}${local_stacks}${stacks}"
 export ROS_WORKSPACE="${ws}${ROS_WORKSPACE+:}${ROS_WORKSPACE#${ws}}"
 export ROS_PACKAGE_PATH="${pp}${ROS_PACKAGE_PATH+:}${ROS_PACKAGE_PATH#${pp}}"
 
-# conveniance stuff for non gentoo:
+# conveniance stuff:
+alias .ros=". ${ws%%:*}/setup.sh"
+# for non ubuntu:
 if [ ! -f "/etc/lsb-release" ] ||
     [ "$(sed -ne 's:^DISTRIB_ID=.\(.*\).$:\1:p' <'/etc/lsb-release')" = 'Gentoo' ]
 then

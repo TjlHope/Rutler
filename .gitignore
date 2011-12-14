@@ -1,5 +1,15 @@
 
-ROS_NOBUILD
+#temp files
+*~
+.*.swp
+#compiled files
+*.a
+*.o
+*.pyc
+cmake_install.cmake
+CMakeCache.txt
+#compiled dirs
+CMakeFiles
 arduino/libraries
 arduino/*/applet
 build
@@ -9,8 +19,6 @@ old
 msg_gen
 srv_gen
 src/*_msgs
-*.a
-*.o
-*.pyc
+#misc
+ROS_NOBUILD
 .svn
-
