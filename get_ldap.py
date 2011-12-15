@@ -123,10 +123,22 @@ def rekey_dicts(d, new_key, keep=[], remove=[], old_key='_old',
     return nd
 
 
+def map_people_to_room(people):
+    pwr = {}
+    for p in ee_people:
+        l = p['physicalDeliveryOfficeName'][0].split(', ')
+        if len(l) > 2 and l[1] == 'Electrical Engineering':
+            for el in l:
+                el = el.strip('()[]{}:,.')
+                if el[1:-1].isdigit():
+                    pwr[p['cn'][0]] = el.upper()
+    return pwr
+
+
 if __name__ == '__main__':
     # Get LDAP user data...
     pickle_addressbook = 'Imperial_addressbook.pkl'
-    pickle_ic_elec = 'Imperial_elec.pkl'
+    pickle_ee_people = 'Imperial_elec.pkl'
     if len(sys.argv) > 1:
 	if sys.argv[1] == 'download':
 	    # ... from server
@@ -142,12 +154,13 @@ if __name__ == '__main__':
 	    ic_ldap.result = data
 	# Get it in a usable format...
 	ee_people = ic_ldap.get_people("elec")
-	with open(pickle_ic_elec, 'w') as fl:
-	    pickle.dump(ic_ldap, fl)
+	with open(pickle_ee_people, 'w') as fl:
+	    pickle.dump(ee_people, fl)
     else:
-	with open(pickle_ic_elec, 'r') as fl:
-	    ic_ldap = pickle.load(fl)
-	    ee_people = ic_ldap.people
+        ic_ldap = LDAPScrape()
+	with open(pickle_ee_people, 'r') as fl:
+	    ee_people = pickle.load(fl)
+	    ic_ldap.people = ee_people
     print rekey_dicts(ee_people[:20], 'sn', keep=['sn', 'givenName', 'l'],
 	    pop_new=False)
     sys.exit(0)
