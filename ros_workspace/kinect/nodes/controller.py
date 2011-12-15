@@ -3,11 +3,14 @@
 import math
 from collections import namedtuple
 
-import roslib; roslib.load_manifest('kinect')
+import roslib
+roslib.load_manifest('kinect')
 import rospy
 from std_msgs.msg import Empty, Int8
 from kinect.msg import User, Polar
 
+
+PI_180 = math.pi / 180
 
 PolarID = namedtuple("PolarID", "id pos")
 
@@ -22,6 +25,7 @@ class Vision(object):
         rospy.Subscriber("kinect_users", User, self.kinect_watcher)
         rospy.Subscriber("new_user", Empty, self.new_user)
         self.user_publisher = rospy.Publisher("user_position", Polar)
+        self.servo_publisher = rospy.Publisher("servo", Int8)
         self.loop = rospy.timer.Rate(10)
 
     def servo_watcher(self, position):
@@ -39,12 +43,13 @@ class Vision(object):
         """Indicate a new user needs to be detected."""
         self.active_user = None
 
-    def user_position(self, user):
+    def user_position(self, pos):
         """Combine Servo position with user position to give user position
         relative to the robot, rather than the kinect. Returned in Polar form.
         """
-        pos = Polar(0, 0)
-        return pos
+        r = math.sqrt(pos.x ** 2 + pos.z ** 2)
+        theta = math.atan2(pos.x, pos.z) + self.position * PI_180
+        return Polar(r, theta)
 
     def get_new_user(self):
         """Iterate over current active users to find one within given
@@ -71,6 +76,8 @@ class Vision(object):
                 self.active_user = PolarID(self.active_user.id,
                                            self.user_position(user.pos))
                 self.user_publisher(self.active_user.pos)
+                servo_msg = Int8(int(self.active_user.pos.theta / PI_180))
+                self.servo_publisher(servo_msg)
             self.loop.sleep()
 
 
@@ -78,4 +85,3 @@ if __name__ == '__main__':
     rospy.init_node('vision')
     vision_node = Vision()
     vision_node.spin()
-
