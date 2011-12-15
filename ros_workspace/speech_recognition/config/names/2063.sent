@@ -6,7 +6,7 @@
 <s> MISS </s>
 <s> PETER CHEUNG </s>
 <s> YIANNIS DEMIRIS </s>
-<s> TOM PIKE </s>
+<s> PIKE </s>
 <s> CHRISTOS BOUGANIS </s>
 <s> ALESSANDRO ASTOLFI </s>
 <s> MIKE BROOKES </s>
@@ -32,11 +32,26 @@
 <s> KAY HANCOX </s>
 <s> CHRISTINE ALLWRIGHT </s>
 <s> CLARE DRYSDALE </s>
-<s> YES </s>
-<s> NO </s>
-<s> ROOM NUMBER </s>
-<s> EMAIL ADDRESS </s>
-<s> TIMETABLE </s>
 <s> UNDERGRADUATE OFFICE </s>
 <s> UNDERGRAD </s>
-<s> HEAD OF DEPARTMENT </s>
+<s> 0 </s>
+<s> 1 </s>
+<s> 2 </s>
+<s> 3 </s>
+<s> 4 </s>
+<s> 5 </s>
+<s> 6 </s>
+<s> 7 </s>
+<s> 8 </s>
+<s> 9 </s>
+<s> 10 </s>
+<s> 11 </s>
+<s> 12 </s>
+<s> 13 </s>
+<s> 14 </s>
+<s> 15 </s>
+<s> 16 </s>
+<s> 17 </s>
+<s> 18 </s>
+<s> 19 </s>
+<s> 20 </s>

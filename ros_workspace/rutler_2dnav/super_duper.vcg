@@ -1,0 +1,121 @@
+Background\ ColorR=0
+Background\ ColorG=0
+Background\ ColorB=0
+Fixed\ Frame=/map
+Target\ Frame=/map
+Current\ goal.Alpha=1
+Current\ goal.ColorR=1
+Current\ goal.ColorG=0.1
+Current\ goal.ColorB=0
+Current\ goal.Enabled=1
+Current\ goal.Head\ Length=0.3
+Current\ goal.Head\ Radius=0.2
+Current\ goal.Shaft\ Length=1
+Current\ goal.Shaft\ Radius=0.1
+Current\ goal.Shape=0
+Current\ goal.Topic=/move_base/current_goal
+Garden\ Path.Alpha=1
+Garden\ Path.ColorR=0.1
+Garden\ Path.ColorG=1
+Garden\ Path.ColorB=0
+Garden\ Path.Enabled=1
+Garden\ Path.Topic=/move_base/NavfnROS/plan
+Global\ Plam.Alpha=1
+Global\ Plam.ColorR=0.1
+Global\ Plam.ColorG=1
+Global\ Plam.ColorB=0
+Global\ Plam.Enabled=1
+Global\ Plam.Topic=/move_base/TrajectoryPlannerROS/global_plan
+Grand\ Piano.Alpha=1
+Grand\ Piano.ColorR=0.352941
+Grand\ Piano.ColorG=0.243137
+Grand\ Piano.ColorB=0
+Grand\ Piano.Enabled=1
+Grand\ Piano.Topic=/move_base/local_costmap/obstacles
+Grid.Alpha=0.5
+Grid.Cell\ Size=1
+Grid.ColorR=0.5
+Grid.ColorG=0.5
+Grid.ColorB=0.5
+Grid.Enabled=1
+Grid.Line\ Style=0
+Grid.Line\ Width=0.03
+Grid.Normal\ Cell\ Count=0
+Grid.OffsetX=0
+Grid.OffsetY=0
+Grid.OffsetZ=0
+Grid.Plane=0
+Grid.Plane\ Cell\ Count=30
+Grid.Reference\ Frame=/base_link
+Osterich\ Burger.Alpha=1
+Osterich\ Burger.ColorR=0
+Osterich\ Burger.ColorG=0.223529
+Osterich\ Burger.ColorB=1
+Osterich\ Burger.Enabled=1
+Osterich\ Burger.Topic=/move_base/TrajectoryPlannerROS/local_plan
+Particle\ Cloud.ColorR=1
+Particle\ Cloud.ColorG=0.1
+Particle\ Cloud.ColorB=0
+Particle\ Cloud.Enabled=1
+Particle\ Cloud.Topic=/particlecloud
+Robot\ Footprint.Alpha=1
+Robot\ Footprint.ColorR=1
+Robot\ Footprint.ColorG=0
+Robot\ Footprint.ColorB=0.403922
+Robot\ Footprint.Enabled=1
+Robot\ Footprint.Topic=/move_base/local_costmap/robot_footprint
+School\ Bus.Alpha=1
+School\ Bus.ColorR=0.156863
+School\ Bus.ColorG=0.619608
+School\ Bus.ColorB=0
+School\ Bus.Enabled=1
+School\ Bus.Topic=/move_base/local_costmap/inflated_obstacles
+Static\ Map.Alpha=0.7
+Static\ Map.Draw\ Behind=0
+Static\ Map.Enabled=1
+Static\ Map.Topic=/map
+Tool\ 2D\ Nav\ GoalTopic=move_base_simple/goal
+Tool\ 2D\ Pose\ EstimateTopic=initialpose
+Camera\ Type=rviz::FixedOrientationOrthoViewController
+Camera\ Config=12.6585 -20.733 13.0162 -31.1863 -0.707107 -0 -0 0.707107
+Property\ Grid\ State=selection=;expanded=.Global Options,Static Map.Enabled,Particle Cloud.Enabled,Robot Footprint.Enabled,Grand Piano.Enabled,School Bus.Enabled,Global Plam.Enabled,Osterich Burger.Enabled,Garden Path.Enabled,Current goal.Enabled;scrollpos=0,24;splitterpos=247,497;ispageselected=1
+[Display0]
+Name=Grid
+Package=rviz
+ClassName=rviz::GridDisplay
+[Display1]
+Name=Static Map
+Package=rviz
+ClassName=rviz::MapDisplay
+[Display2]
+Name=Particle Cloud
+Package=rviz
+ClassName=rviz::PoseArrayDisplay
+[Display3]
+Name=Robot Footprint
+Package=rviz
+ClassName=rviz::PolygonDisplay
+[Display4]
+Name=Grand Piano
+Package=rviz
+ClassName=rviz::GridCellsDisplay
+[Display5]
+Name=School Bus
+Package=rviz
+ClassName=rviz::GridCellsDisplay
+[Display6]
+Name=Global Plam
+Package=rviz
+ClassName=rviz::PathDisplay
+[Display7]
+Name=Osterich Burger
+Package=rviz
+ClassName=rviz::PathDisplay
+[Display8]
+Name=Garden Path
+Package=rviz
+ClassName=rviz::PathDisplay
+[Display9]
+Name=Current goal
+Package=rviz
+ClassName=rviz::PoseDisplay

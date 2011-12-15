@@ -1,0 +1,16 @@
+yes
+no
+room number
+email address
+timetable
+stop
+slow down
+wait
+pause
+cancel
+reset
+restart
+start
+go
+continue
+options
