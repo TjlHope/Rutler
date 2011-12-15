@@ -48,7 +48,6 @@ void servo_cb(const std_msgs::Int8& cmd_msg)
 
 ros::Subscriber<std_msgs::Int8> sub("servo", servo_cb);
 
-
 void setup()
 {
 	pinMode(13, OUTPUT);
@@ -75,7 +74,7 @@ void loop()
 		servo.write(angle);
 		delay(50);
     }
-	position.data = angle;
+	position.data = angle - 90;	// align center as 0
 	pos_pub.publish(&position);
 	delay(50);
 }

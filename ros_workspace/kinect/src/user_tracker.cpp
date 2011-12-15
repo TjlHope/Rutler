@@ -186,7 +186,7 @@ void publishTransforms(const std::string& frame_id, ros::Publisher& publisher)
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "kinnect");
+    ros::init(argc, argv, "kinnect_raw");
     ros::NodeHandle nh;
 
     string configFilename = ros::package::getPath("kinect") + "/openni.xml";
