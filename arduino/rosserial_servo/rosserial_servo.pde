@@ -38,16 +38,15 @@ ros::Publisher inc_pub("servo_increment", &increment);
 
 void servo_cb(const std_msgs::Int8& cmd_msg)
 {
+	target = int(cmd_msg.data) + 90; // msg is with center as 0
 	angle = servo.read();
-	int offset = int(cmd_msg.data);
+	int offset = target - angle;
 	increment.data = offset;
 	inc_pub.publish(&increment);
-	target = angle + offset;
 	digitalWrite(13, HIGH-digitalRead(13));
 }
 
 ros::Subscriber<std_msgs::Int8> sub("servo", servo_cb);
-
 
 void setup()
 {
@@ -75,7 +74,7 @@ void loop()
 		servo.write(angle);
 		delay(50);
     }
-	position.data = angle;
+	position.data = angle - 90;	// align center as 0
 	pos_pub.publish(&position);
 	delay(50);
 }
