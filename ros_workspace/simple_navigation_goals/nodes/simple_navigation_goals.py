@@ -36,6 +36,8 @@ goal_state = [
 
 goal = None
 client = None
+currentFloor = None
+storeGoal = None
 
 # receive from interface
 # "{ "action": "move", "value": "301" }"
@@ -132,6 +134,7 @@ def resume():
 
 
 def callback(data):
+    global storeGoal, currentFloor
     rospy.loginfo("%s I heard %s", rospy.get_name(), data.data)
     try:
     	location = json.loads(data.data)
@@ -149,10 +152,25 @@ def callback(data):
             #print dest
             if location['action'] == 'start':
                 # load intial coordinates
+                currentFloor = location['value'][0]
                 set_origin(dest)
+                if currentFloor != None:
+                    room = rooms_dict[storeGoal]
+                    dest = room._make([float(d) for d in room])
+                    go_to_dest(dest)
             elif location['action'] == 'move':
+                if location['value'][0] != currentFloor:
+                    storeGoal = location['value']
+                    room = rooms_dict[currentFloor+'00'] #lift
+                    dest = room._make([float(d) for d in room])
                 go_to_dest(dest)
                 #rospy.loginfo("x: %d; y: %d;", dest.x, dest.y)
+            elif location['action'] == 'arrived':
+                if location['value'][0] == storeGoal[0]:
+                    currentFloor = location['value'][0]
+                    room = rooms_dict[storeGoal]
+                    dest = room._make([float(d) for d in room])
+                    go_to_dest(dest)
             else:
                 rospy.logerr("Someone fucked up: %s", location)
     except ValueError:
