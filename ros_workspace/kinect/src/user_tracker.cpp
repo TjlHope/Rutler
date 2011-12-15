@@ -142,15 +142,18 @@ void publishTransforms(const std::string& frame_id, ros::Publisher& publisher)
 		
 		XnPoint3D point;
 		g_UserGenerator.GetCoM(users[i], point);
-		g_DepthGenerator.ConvertRealWorldToProjective(1, &point, &point);
+		
 
 		int idx = user - 1;
 		if (kinectUsers[idx].active == TRUE)
 		{
-			estimateVelocity(point, kinectUsers[idx]);
+			if (isnan(point.X)==1||isnan(point.Y)==1||isnan(point.Z)==1) // TODO 
+				kinectUsers[idx].active == FALSE;
+			else
+				estimateVelocity(point, kinectUsers[idx]);
 			publisher.publish(kinectUsers[idx]);
 		}
-
+		g_DepthGenerator.ConvertRealWorldToProjective(1, &point, &point);
 		// original sceleton transform publishing.
         if (g_UserGenerator.GetSkeletonCap().IsTracking(user))
 		{

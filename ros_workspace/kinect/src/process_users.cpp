@@ -32,14 +32,14 @@
 void estimateVelocity(XnPoint3D pt, kinect::User& user)
 {
 	kinect::User userT = user;
-	userT.pos.x = user.pos.x + 0.033 * user.pos.x + ((0.033 / EP) * HP) * (pt.X - user.pos.x);
-	userT.pos.y = user.pos.y + 0.033 * user.pos.y + ((0.033 / EP) * HP) * (pt.Y - user.pos.y);
-	userT.pos.z = user.pos.z + 0.033 * user.pos.z + ((0.033 / EP) * HP) * (pt.Z - user.pos.z);
+	userT.pos.x = user.pos.x + 0.033 * user.vel.x + ((0.033 / EP) * HP) * (pt.X - user.pos.x);
+	userT.pos.y = user.pos.y + 0.033 * user.vel.y + ((0.033 / EP) * HP) * (pt.Y - user.pos.y);
+	userT.pos.z = user.pos.z + 0.033 * user.vel.z + ((0.033 / EP) * HP) * (pt.Z - user.pos.z);
 	userT.vel.x = user.vel.x + (0.033 / (EP * EP)) * HV * (pt.X - user.pos.x);
 	userT.vel.y = user.vel.y + (0.033 / (EP * EP)) * HV * (pt.Y - user.pos.y);
 	userT.vel.z = user.vel.z + (0.033 / (EP * EP)) * HV * (pt.Z - user.pos.z);
 	user = userT;
-	ROS_DEBUG("Esimatation for User %d:\n\t\tX\tY\tZ\nPosition\t%.3f\t%.3f\t%.3f\nVelocity\t%.3f\t%.3f\t%.3f\n\n",
+	ROS_INFO("Estimation for User %d:\n\t\tX\tY\tZ\nPosition\t%.3f\t%.3f\t%.3f\nVelocity\t%.3f\t%.3f\t%.3f\n\n",
 			  user.id, user.pos.x / 1000, user.pos.y / 1000, user.pos.z / 1000,
 			  user.vel.x / 1000, user.vel.y / 1000, user.vel.z / 1000);
 }
