@@ -154,10 +154,6 @@ def callback(data):
                 # load intial coordinates
                 currentFloor = location['value'][0]
                 set_origin(dest)
-                if currentFloor != None:
-                    room = rooms_dict[storeGoal]
-                    dest = room._make([float(d) for d in room])
-                    go_to_dest(dest)
             elif location['action'] == 'move':
                 if location['value'][0] != currentFloor:
                     storeGoal = location['value']
