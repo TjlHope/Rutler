@@ -42,6 +42,11 @@ int main(int argc, char** argv){
 			tf::StampedTransform(
 				tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.0, 0.07, 0.2)),
 				ros::Time::now(), "/base_link", "/laser"));
+    //base_link => sonar_frame
+		broadcaster.sendTransform(
+			tf::StampedTransform(
+				tf::Transform(tf::Quaternion(0, 0, 0, 1), tf::Vector3(0.0, 0.0, 0.235)),
+				ros::Time::now(), "/base_link", "/sonar_frame"));
 
     ros::spinOnce();		
     r.sleep();

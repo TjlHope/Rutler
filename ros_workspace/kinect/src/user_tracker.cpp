@@ -33,6 +33,7 @@ XnChar g_strPose[20] = "";
 
 #define NUSERS 15
 kinect::User kinectUsers[NUSERS];
+//float oldX=0;
 
 //---------------------------------------------------------------------------
 // Function Definitions
@@ -134,28 +135,28 @@ void publishTransforms(const std::string& frame_id, ros::Publisher& publisher)
 {
 	XnUserID users[NUSERS];
 	XnUInt16 users_count = NUSERS;
-    g_UserGenerator.GetUsers(users, users_count);
+    	g_UserGenerator.GetUsers(users, users_count);
 
-    for (int i = 0; i < users_count; ++i)
+	for (int i = 0; i < users_count; ++i)
 	{
-        XnUserID user = users[i];
+		XnUserID user = users[i];
 		
 		XnPoint3D point;
 		g_UserGenerator.GetCoM(users[i], point);
 		
 
 		int idx = user - 1;
+		if (isnan(point.X)==1||isnan(point.Y)==1||isnan(point.Z)==1) // TODO 
+			kinectUsers[idx].active == FALSE;
 		if (kinectUsers[idx].active == TRUE)
-		{
-			if (isnan(point.X)==1||isnan(point.Y)==1||isnan(point.Z)==1) // TODO 
-				kinectUsers[idx].active == FALSE;
-			else
-				estimateVelocity(point, kinectUsers[idx]);
-			publisher.publish(kinectUsers[idx]);
-		}
-		g_DepthGenerator.ConvertRealWorldToProjective(1, &point, &point);
+			estimateVelocity(point, kinectUsers[idx]);
+			//if (point.X-oldX>=20)
+			//publisher.publish(kinectUsers[idx]);
+			//oldX=point.X;
+		//}
+		//g_DepthGenerator.ConvertRealWorldToProjective(1, &point, &point);
 		// original sceleton transform publishing.
-        if (g_UserGenerator.GetSkeletonCap().IsTracking(user))
+        	if (g_UserGenerator.GetSkeletonCap().IsTracking(user))
 		{
 			publishTransform(user, XN_SKEL_HEAD,           frame_id, "head");
 			publishTransform(user, XN_SKEL_NECK,           frame_id, "neck");
@@ -177,7 +178,12 @@ void publishTransforms(const std::string& frame_id, ros::Publisher& publisher)
 			publishTransform(user, XN_SKEL_RIGHT_KNEE,     frame_id, "right_knee");
 			publishTransform(user, XN_SKEL_RIGHT_FOOT,     frame_id, "right_foot");
 		}
-    }
+	}
+	for (int i = 0; i < sizeof(kinectUsers); ++i)
+	{
+		publisher.publish(kinectUsers[i]);
+	}
+
 }
 
 #define CHECK_RC(nRetVal, what)										\

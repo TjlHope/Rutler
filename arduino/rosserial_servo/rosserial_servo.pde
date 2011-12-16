@@ -15,7 +15,7 @@
 // Try and hack roslib to work with make
 #define __AVR_ATmega1280__
 #include <HardwareSerial.h>
-extern HardwareSerial Serial = Serial1;
+//extern HardwareSerial Serial = Serial1;
 
 #include <WProgram.h>
 #include <Servo.h> 
@@ -39,6 +39,10 @@ ros::Publisher inc_pub("servo_increment", &increment);
 void servo_cb(const std_msgs::Int8& cmd_msg)
 {
 	target = int(cmd_msg.data) + 90; // msg is with center as 0
+        if (target > 180)
+            target = 180;
+        else if (target < 0)
+            target = 0;
 	angle = servo.read();
 	int offset = target - angle;
 	increment.data = offset;

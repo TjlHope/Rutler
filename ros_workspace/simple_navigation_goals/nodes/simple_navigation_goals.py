@@ -187,8 +187,16 @@ def listener():
 
     # END
     #rospy.spin()
+    suc_sent = False
     while not rospy.is_shutdown():##and x == 1:
         if client:
+            if client.get_state == 3:
+                if suc_sent:
+                    continue
+                else:
+                    suc_sent = True
+            else:
+                suc_sent = False
             rospy.loginfo('state: %s', goal_state[client.get_state()])
             status.publish(
             '{"status": "'+goal_state[client.get_state()]+'"}'
