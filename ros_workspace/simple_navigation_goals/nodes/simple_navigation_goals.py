@@ -36,8 +36,6 @@ goal_state = [
 
 goal = None
 client = None
-currentFloor = None
-storeGoal = None
 
 # receive from interface
 # "{ "action": "move", "value": "301" }"
@@ -152,21 +150,10 @@ def callback(data):
             #print dest
             if location['action'] == 'start':
                 # load intial coordinates
-                currentFloor = location['value'][0]
                 set_origin(dest)
             elif location['action'] == 'move':
-                if location['value'][0] != currentFloor:
-                    storeGoal = location['value']
-                    room = rooms_dict[currentFloor+'00'] #lift
-                    dest = room._make([float(d) for d in room])
                 go_to_dest(dest)
                 #rospy.loginfo("x: %d; y: %d;", dest.x, dest.y)
-            elif location['action'] == 'arrived':
-                if location['value'][0] == storeGoal[0]:
-                    currentFloor = location['value'][0]
-                    room = rooms_dict[storeGoal]
-                    dest = room._make([float(d) for d in room])
-                    go_to_dest(dest)
             else:
                 rospy.logerr("Someone fucked up: %s", location)
     except ValueError:
@@ -200,8 +187,16 @@ def listener():
 
     # END
     #rospy.spin()
+    suc_sent = False
     while not rospy.is_shutdown():##and x == 1:
         if client:
+            if client.get_state == 3:
+                if suc_sent:
+                    continue
+                else:
+                    suc_sent = True
+            else:
+                suc_sent = False
             rospy.loginfo('state: %s', goal_state[client.get_state()])
             status.publish(
             '{"status": "'+goal_state[client.get_state()]+'"}'

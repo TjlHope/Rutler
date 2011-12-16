@@ -75,6 +75,6 @@ def watcher(node):
 
 if __name__ == '__main__':
     node = NodeProcess(name=
-        'node /home/jkimbo/www/rutler-interface/app.js')
+        'node /home/rutler/rutler-interface/app.js')
     watcher(node)
 
