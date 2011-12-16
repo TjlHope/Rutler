@@ -196,10 +196,10 @@ void publishTransforms(const std::string& frame_id, ros::Publisher& publisher)
 
 int main(int argc, char **argv)
 {
-    ros::init(argc, argv, "kinnect_raw");
+    ros::init(argc, argv, "kinnect");
     ros::NodeHandle nh;
 
-    string configFilename = ros::package::getPath("kinect") + "/openni.xml";
+    string configFilename = ros::package::getPath("kinect") + "/config/openni.xml";
     XnStatus nRetVal = g_Context.InitFromXmlFile(configFilename.c_str());
     CHECK_RC(nRetVal, "InitFromXml");
 

@@ -1,0 +1,11 @@
+<launch>
+
+  <node name="servo_node" pkg="rosserial_python" type="serial_node.py" output="screen">
+    <param name="port" value="/dev/ttyUSB0"/>
+  </node>
+
+  <node name="kinect" pkg="kinect" type="user_tracker" output="screen" />
+
+  <node name="vision" pkg="kinect" type="controller.py" output="screen" />
+
+</launch>

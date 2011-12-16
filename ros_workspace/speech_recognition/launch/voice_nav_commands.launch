@@ -1,10 +1,12 @@
 <launch>
 
   <node name="speech_names" pkg="pocketsphinx" type="recognizer.py" output="screen">
-    <param name="lm" value="$(find speech_recognition)/config/rooms/5189.lm"/>
-    <param name="dict" value="$(find speech_recognition)/config/rooms/5189.dic"/>
-    <!--<param name="lm" value="$(find speech_recognition)/config/names/1531.lm"/>
-    <param name="dict" value="$(find speech_recognition)/config/names/1531.dic"/>-->
+    <param name="lm" value="$(find speech_recognition)/config/rooms/rooms.lm"/>
+    <param name="dict" value="$(find speech_recognition)/config/rooms/rooms.dic"/>
+    <!--
+    <param name="lm" value="$(find speech_recognition)/config/names/names.lm"/>
+    <param name="dict" value="$(find speech_recognition)/config/names/names.dic"/>
+    -->
   </node>
 
 </launch>

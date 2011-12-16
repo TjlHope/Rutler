@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 
 import sys 
+import os
 import json
 from collections import namedtuple
 
@@ -211,7 +212,10 @@ if __name__ == '__main__':
     #rospy.Subscriber("chatter", String, callback)
     #rospy.loginfo("%s", String)
     #rospy.sleep(3.0)
-    rooms_dict = csv2dict('/home/rutler/Rutler/ros_workspace/simple_navigation_goals/nodes/rooms.csv')
+    rooms_dict = csv2dict(os.path.join(
+                            os.environ['ROS_WORKSPACE'].split(':')[0],
+                            'simple_navigation_goals',
+                            'config', 'rooms.csv'))
     try:
         listener()
     except KeyboardInterrupt:
