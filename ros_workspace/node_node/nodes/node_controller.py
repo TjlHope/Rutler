@@ -1,17 +1,24 @@
 #!/usr/bin/env python
 
-import roslib; roslib.load_manifest('node_node')
-import rospy
-from std_msgs.msg import String
 import sys
+import os
 import shlex
 import subprocess as sp
 import threading as th
 import json
 
+import roslib; roslib.load_manifest('node_node')
+import rospy
+from std_msgs.msg import String
+
+
 class NodeProcess(object):
     def __init__(self, stdin=sp.PIPE, stdout=sp.PIPE, stderr=sp.PIPE, 
                  name='node'):
+        with open(os.path.join(os.environ['ROS_WORKSPACE'].split(':')[0],
+                               'speech_recognition', 'config',
+                               'map_people_room.json')) as fl:
+            self.map_people_room = json.load(fl)
         self.stdin = stdin
         self.stdout = stdout
         self.stderr = stderr
@@ -31,6 +38,12 @@ class NodeProcess(object):
 
     def sendRecognition(self, data):
         if data.data:
+            if not data.data[1:-1].isdigit():
+                try:
+                    data.data = self.map_people_room[data.data]
+                except KeyError:
+                    # Invalid person
+                    return
             output = '{"recog": "'+data.data+'"}'
             self.proc.stdin.write(output)
             rospy.loginfo(rospy.get_name()+
@@ -79,6 +92,7 @@ def watcher(node):
     node.move = rospy.Publisher('move_rutler', String)
     node.talk = rospy.Publisher('speak_input', String)
     rospy.spin()
+
 
 if __name__ == '__main__':
     node = NodeProcess(name=
