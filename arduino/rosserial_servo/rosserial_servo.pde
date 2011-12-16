@@ -31,10 +31,10 @@ int angle = 90;
 int target = angle;
 
 std_msgs::Int8 position;
-std_msgs::Int8 increment;
+//std_msgs::Int8 increment;
 
 ros::Publisher pos_pub("servo_position", &position);
-ros::Publisher inc_pub("servo_increment", &increment);
+//ros::Publisher inc_pub("servo_increment", &increment);
 
 void servo_cb(const std_msgs::Int8& cmd_msg)
 {
@@ -43,10 +43,10 @@ void servo_cb(const std_msgs::Int8& cmd_msg)
             target = 180;
         else if (target < 0)
             target = 0;
-	angle = servo.read();
-	int offset = target - angle;
-	increment.data = offset;
-	inc_pub.publish(&increment);
+	//angle = servo.read();
+	//int offset = target - angle;
+	//increment.data = offset;
+	//inc_pub.publish(&increment);
 	digitalWrite(13, HIGH-digitalRead(13));
 }
 
@@ -58,7 +58,7 @@ void setup()
 
 	nh.initNode();
 	nh.advertise(pos_pub);
-	nh.advertise(inc_pub);
+	//nh.advertise(inc_pub);
 	nh.subscribe(sub);
 
 	servo.attach(9); //attach it to pin 9
@@ -68,18 +68,25 @@ void setup()
 void loop()
 {
 	nh.spinOnce();
-    while(angle != target)
-    {
-		angle = servo.read();
-		if(angle < target)
-			angle += 1;
-		else if(angle > target)
-			angle -= 1;
-		servo.write(angle);
-		delay(50);
-    }
+	while(angle != target)
+	{
+	angle = servo.read();
+	/*int offset = abs(target - angle);
+	int inc = 0;
+	if (offset > 20)
+		inc = 5;
+	else if (offset > 10)
+		inc = 2;
+	else
+		inc = 1;*/
+	if(angle < target)
+		angle += 1;
+	else if(angle > target)
+		angle -= 1;
+	servo.write(angle);
 	position.data = angle - 90;	// align center as 0
 	pos_pub.publish(&position);
 	delay(50);
+	}
 }
 

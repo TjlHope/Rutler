@@ -33,7 +33,6 @@ XnChar g_strPose[20] = "";
 
 #define NUSERS 15
 kinect::User kinectUsers[NUSERS];
-//float oldX=0;
 
 //---------------------------------------------------------------------------
 // Function Definitions
@@ -135,7 +134,7 @@ void publishTransforms(const std::string& frame_id, ros::Publisher& publisher)
 {
 	XnUserID users[NUSERS];
 	XnUInt16 users_count = NUSERS;
-    	g_UserGenerator.GetUsers(users, users_count);
+	g_UserGenerator.GetUsers(users, users_count);
 
 	for (int i = 0; i < users_count; ++i)
 	{
@@ -146,7 +145,7 @@ void publishTransforms(const std::string& frame_id, ros::Publisher& publisher)
 		
 
 		int idx = user - 1;
-		if (isnan(point.X)==1||isnan(point.Y)==1||isnan(point.Z)==1) // TODO 
+		if (isnan(point.X)==1||isnan(point.Y)==1||isnan(point.Z)==1||point.Z==0) // TODO 
 			kinectUsers[idx].active == FALSE;
 		if (kinectUsers[idx].active == TRUE)
 			estimateVelocity(point, kinectUsers[idx]);
@@ -156,7 +155,7 @@ void publishTransforms(const std::string& frame_id, ros::Publisher& publisher)
 		//}
 		//g_DepthGenerator.ConvertRealWorldToProjective(1, &point, &point);
 		// original sceleton transform publishing.
-        	if (g_UserGenerator.GetSkeletonCap().IsTracking(user))
+		/*if (g_UserGenerator.GetSkeletonCap().IsTracking(user))
 		{
 			publishTransform(user, XN_SKEL_HEAD,           frame_id, "head");
 			publishTransform(user, XN_SKEL_NECK,           frame_id, "neck");
@@ -177,13 +176,15 @@ void publishTransforms(const std::string& frame_id, ros::Publisher& publisher)
 			publishTransform(user, XN_SKEL_RIGHT_HIP,      frame_id, "right_hip");
 			publishTransform(user, XN_SKEL_RIGHT_KNEE,     frame_id, "right_knee");
 			publishTransform(user, XN_SKEL_RIGHT_FOOT,     frame_id, "right_foot");
-		}
+		}*/
 	}
-	for (int i = 0; i < sizeof(kinectUsers); ++i)
+	for (int i = 0; i < NUSERS; ++i)
 	{
-		publisher.publish(kinectUsers[i]);
+		if (kinectUsers[i].id != 0)
+			publisher.publish(kinectUsers[i]);
+			//if (kinectUsers[i].active == 0)
+				//kinectUsers[i].id = 0;
 	}
-
 }
 
 #define CHECK_RC(nRetVal, what)										\
@@ -201,6 +202,12 @@ int main(int argc, char **argv)
     string configFilename = ros::package::getPath("kinect") + "/openni.xml";
     XnStatus nRetVal = g_Context.InitFromXmlFile(configFilename.c_str());
     CHECK_RC(nRetVal, "InitFromXml");
+
+	// init kinect user IDs to 0 to indicate they're invalid.
+	for (int i = 0; i < NUSERS; i++)
+	{
+		kinectUsers[i].id = 0;
+	}
 
     nRetVal = g_Context.FindExistingNode(XN_NODE_TYPE_DEPTH, g_DepthGenerator);
     CHECK_RC(nRetVal, "Find depth generator");

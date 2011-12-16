@@ -40,7 +40,7 @@ class Vision(object):
     def servo_watcher(self, position):
         """Callback function to process data from the servo."""
         if position.data:
-            self.position = position.data
+            self.position = position.data * PI_180
 
     def kinect_watcher(self, kinect_user):
         """Callback function to process data from the kinect."""
@@ -57,7 +57,7 @@ class Vision(object):
         relative to the robot, rather than the kinect. Returned in Polar form.
         """
         r = math.sqrt(pos.x ** 2 + pos.z ** 2)
-        theta = math.atan(pos.x/ pos.z) + self.position * PI_180
+        theta = math.atan(pos.x/ pos.z) + self.position
         return Polar(r, theta)
 
     def get_new_user(self):
@@ -68,13 +68,15 @@ class Vision(object):
             if user.active:     # only care about active users
                 # see how close they are
                 pos = self.user_position(user.pos)
-                if (pos.r < 2000 and abs(pos.theta < 0.5) and   # close
+                if (pos.r < 2000 and abs(pos.theta < 0.4) and   # close
                         (math.sqrt(sum([user.vel.x ** 2, user.vel.y ** 2,
-                                   user.vel.z ** 2])) < 800) and  # slow
-                        (not self.active_user or        # best candidate
-                         (abs(pos.theta) < abs(self.active_user.pos.theta)))):
-                    self.active_user = PolarID(user.id, pos)
-                    rospy.loginfo("Got new user %s", user.id)
+                                        user.vel.z ** 2])) < 400)): # slow
+                    if (not self.active_user or        # best candidate
+                            (abs(pos.theta) < abs(self.active_user.pos.theta))):
+                        self.active_user = PolarID(user.id, pos)
+                        rospy.loginfo("Got new user %s", user.id)
+                    else:
+                        rospy.loginfo("Already have a better avtive user.")
                 else:
                     rospy.loginfo("New User %s not in parameters.", user.id)
 
@@ -91,9 +93,9 @@ class Vision(object):
                     self.user_publisher.publish(
                             json.dumps(dict(zip(new_pos._fields,
                                                 new_pos))))
-                    if not math.isnan(self.active_user.pos.theta):
-                        servo_msg = Int8(int(self.active_user.pos.theta /
-                                             PI_180))
+                    if (not math.isnan(new_pos.theta) and
+                            abs(new_pos.theta - self.position) > 0.08):
+                        servo_msg = Int8(int(new_pos.theta / PI_180))
                         self.servo_publisher.publish(servo_msg)
                     self.active_user = PolarID(self.active_user.id, new_pos)
                     rospy.loginfo("Publish user:\n%s", self.active_user)
