@@ -1,7 +1,8 @@
 
-#temp files
+#temp/backup files
 *~
 .*.swp
+*.bak
 #compiled files
 *.a
 *.o
@@ -19,6 +20,8 @@ old
 msg_gen
 srv_gen
 src/*_msgs
+Log
+log.txt
 #misc
 ROS_NOBUILD
 .svn

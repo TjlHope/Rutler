@@ -8,9 +8,7 @@ peter cheung
 yiannis demiris
 pike
 christos bouganis
-alessandro astolfi
 mike brookes
-javier barria
 Thomas Clarke
 pier luigi dragotti
 zahid durrani
@@ -18,15 +16,12 @@ kristel fobelets
 tim green
 andrew holmes
 imad jaimoukha
-paul mitcheson
-patrick naylor
-papavassiliou 
+patrick naylor 
 jeremy pitt
 richard syms
 eric yeatman
 chris toumazou
 kerrigan
-kin leung
 thanassis manikas
 mustafa gurcan
 kay hancox
@@ -34,24 +29,26 @@ christine allwright
 clare drysdale
 undergraduate office
 undergrad
-0
-1
-2
-3
-4
-5
-6
-7
-8
-9
-10
-11
-12
-13
-14
-15
-16
-17
-18
-19
-20
+600
+601
+602
+603
+604
+606
+607
+608
+608A
+610
+612
+613
+614
+615
+616
+617
+618
+619
+620
+200
+201
+202
+

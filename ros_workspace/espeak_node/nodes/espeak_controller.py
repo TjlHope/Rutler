@@ -33,7 +33,7 @@ class EspeakProcess(object):
             try:
                 out = json.loads(data.data)
                 if out['speak']:
-                    self.proc.stdin.write(str(out['speak']))
+                    self.proc.stdin.write(str(out['speak'])+"\n")
                     rospy.loginfo(rospy.get_name()+
                                 " I heard: %s",str(out['speak']))
                 rospy.loginfo("JSON: %s", out)

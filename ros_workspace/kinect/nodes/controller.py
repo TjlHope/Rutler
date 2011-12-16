@@ -34,7 +34,7 @@ class Vision(object):
         rospy.Subscriber("kinect_users", User, self.kinect_watcher)
         rospy.loginfo("Connect to interface...")
         rospy.Subscriber("new_user", Empty, self.new_user)
-        self.user_publisher = rospy.Publisher("user_position_json", String)
+        self.user_publisher = rospy.Publisher("user_position", String)
         self.loop = rospy.timer.Rate(10)
 
     def servo_watcher(self, position):

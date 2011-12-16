@@ -43,6 +43,12 @@ class NodeProcess(object):
             rospy.loginfo(rospy.get_name()+
                         " I heard %s",data.data)
 
+    def sendPosition(self, data):
+        if data.data:
+            self.proc.stdin.write(data.data);
+            rospy.loginfo(rospy.get_name()+
+                        " I heard %s",data.data)
+
     def get_output(self):
         while not rospy.is_shutdown():
             try:
@@ -68,6 +74,7 @@ def watcher(node):
     rospy.Subscriber("rutler_status", String, node.sendCommand)
     rospy.Subscriber("speech_names/output", String, node.sendRecognition)
     rospy.Subscriber("speech_commands/output", String, node.sendCommands)
+    rospy.Subscriber("user_position", String, node.sendPosition)
     node.pub = rospy.Publisher('user_input', String)
     node.move = rospy.Publisher('move_rutler', String)
     node.talk = rospy.Publisher('speak_input', String)
