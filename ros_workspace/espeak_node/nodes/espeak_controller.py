@@ -7,6 +7,7 @@ import threading as th
 import roslib; roslib.load_manifest('espeak_node')
 import rospy
 from std_msgs.msg import String
+import json
 
 
 class EspeakProcess(object):
@@ -27,6 +28,19 @@ class EspeakProcess(object):
             rospy.loginfo(rospy.get_name()+
                         " I heard: %s",data.data)
 
+    def sendMessage(self, data):
+        if data.data:
+            try:
+                out = json.loads(data.data)
+                if out['speak']:
+                    self.proc.stdin.write(str(out['speak']))
+                    rospy.loginfo(rospy.get_name()+
+                                " I heard: %s",str(out['speak']))
+                rospy.loginfo("JSON: %s", out)
+            except ValueError:
+                rospy.logerr("Data.data is not a json string. It is %s.", 
+                        data.data)
+
     def get_output(self):
         while not rospy.is_shutdown():
             out = self.proc.stdout.readline()
@@ -36,6 +50,7 @@ class EspeakProcess(object):
 def watcher(node):
     rospy.init_node('espeak_node', anonymous=True)
     rospy.Subscriber('talk', String, node.sendCommand)
+    rospy.Subscriber('speak_input', String, node.sendMessage)
     rospy.spin()
 
 if __name__ == '__main__':

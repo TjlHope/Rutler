@@ -50,6 +50,7 @@ class NodeProcess(object):
                 out = json.loads(line)
                 self.pub.publish(String(json.dumps(out)))
                 self.move.publish(String(json.dumps(out)))
+                self.talk.publish(String(json.dumps(out)))
                 rospy.loginfo("JSON: %s", out)
             except ValueError:
                 out = line
@@ -69,6 +70,7 @@ def watcher(node):
     rospy.Subscriber("speech_commands/output", String, node.sendCommands)
     node.pub = rospy.Publisher('user_input', String)
     node.move = rospy.Publisher('move_rutler', String)
+    node.talk = rospy.Publisher('speak_input', String)
     rospy.spin()
 
 if __name__ == '__main__':
